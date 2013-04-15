@@ -1,18 +1,22 @@
 package cz.gcm.cwg.activity;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.cwggmc.R;
 
+import cz.gcm.cwg.comm.ApiResult;
+import cz.gcm.cwg.comm.BaseCwgApi;
+
 abstract class BaseActivity extends Activity {
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,44 +28,59 @@ abstract class BaseActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	protected class AsyncTaskActivity extends AsyncTask<String, Void, String> {
-		
-		ProgressDialog progressDialog = new ProgressDialog(BaseActivity.this); 
-		
+
+	protected class AsyncTaskActivity extends
+			AsyncTask<BaseCwgApi, String, JSONObject> {
+
+		ProgressDialog progressDialog = new ProgressDialog(BaseActivity.this);
+
 		@Override
 		protected void onPreExecute() {
-	        this.progressDialog.setMessage("Please wait...");
-	        this.progressDialog.show();
-	    }
-		
-		
-	    @Override
-	    protected String doInBackground(String... params) {
-	    	
-	          for(int i=0;i<5;i++) {
-	              try {
-	                  Thread.sleep(1000);
-	                  Log.d("TAG", ""+i);
-	              } catch (InterruptedException e) {
-	                  // TODO Auto-generated catch block
-	                  e.printStackTrace();
-	              }
-	          }
-	          
-	          return null;
-	    }      
+			this.progressDialog.setCancelable(true);
+			this.progressDialog.setMessage("Loading data, please wait...");
+			this.progressDialog.show();
 
-	    @Override
-	    protected void onPostExecute(String result) {  
-	    	progressDialog.dismiss();
-	    	TextView txt = (TextView) findViewById(R.id.response);
-          txt.setText("Executed:"+result);
-	    }
+		}
 
-	    @Override
-	    protected void onProgressUpdate(Void... values) {
-	    }
+		@Override
+		protected JSONObject doInBackground(BaseCwgApi... object) {
+
+			JSONObject jsonResult = new JSONObject();
+			
+			try{
+				BaseCwgApi calledObject = object[0];
+				
+				//TODO: hardcore for shared prefs 
+				calledObject.setContext(getApplicationContext());
+				
+				Log.d("TAG1", calledObject.toString());
+				
+				jsonResult = calledObject.getResult();	
+				
+				Log.d("TAG2", jsonResult.toString());
+				//return calledObject.getResult();	
+			}catch( Exception e){
+				
+				
+			}
+			
+			return jsonResult;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject result) {
+			TextView txt = (TextView) findViewById(R.id.response);
+			Log.d("onPostExecute", result.toString());
+			txt.setText("Executed:" + result);
+			this.progressDialog.dismiss();
+		}
+
+		@Override
+		protected void onProgressUpdate(String... values) {
+			Log.d("TAG2", values.toString());
+			this.progressDialog.setMessage("onProgressUpdate:"
+					+ ApiResult.resultCallback());
+		}
 	}
 
 }

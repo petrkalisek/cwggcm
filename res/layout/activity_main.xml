@@ -21,7 +21,7 @@
             style="@style/buttonStyle"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:onClick="clickDefault"
+            android:onClick="clickMyCollection"
             android:text="@string/btn_myCollection" />
 
         <Button

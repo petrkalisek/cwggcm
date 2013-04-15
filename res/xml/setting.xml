@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="setting"
+    android:title="@string/action_settings" >
+    
+    <PreferenceCategory 
+        android:title="@string/pref_loginValuesTitle"
+        android:key="setting_key_login"
+        android:enabled="true" >
+        <EditTextPreference
+            android:key="pref_login"
+            android:summary="@string/pref_loginUserSummary"
+            android:title="@string/pref_loginUserTitle"
+            android:hint="@string/pref_loginUserSummary"
+            android:defaultValue="false" />
+        <EditTextPreference
+            android:key="pref_password"
+            android:summary="@string/pref_loginPasswordSummary"
+            android:title="@string/pref_loginPasswordTitle"
+            android:hint="@string/pref_loginPasswordSummary"
+            android:defaultValue="false" />
+        
+        <EditTextPreference
+            android:key="session"
+            android:summary="@string/pref_loginPasswordSummary"
+            android:title="@string/pref_loginPasswordTitle"
+            android:hint="@string/pref_loginPasswordSummary"
+            android:defaultValue="false" />
+        <EditTextPreference
+            android:key="loginFailedCnt"
+            android:defaultValue="0" />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
+        android:title="@string/pref_storageTitle"
+        android:key="setting_key_storage"
+        android:enabled="true" >
+        <CheckBoxPreference
+            android:key="pref_enableLocalDb"
+            android:summary="@string/pref_enableLocalDbSummary"
+            android:title="@string/pref_enableLocalDbTitle"
+            android:hint="@string/pref_enableLocalDbSummary"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+    
+</PreferenceScreen>
