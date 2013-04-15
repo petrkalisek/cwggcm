@@ -52,7 +52,7 @@
             android:layout_height="100dp"
             android:layout_alignTop="@+id/noActionBbutton"
             android:layout_toRightOf="@+id/noActionBbutton"
-            android:onClick="clickDefault"
+            android:onClick="settingActivity"
             android:text="@string/btn_settings" />
     </RelativeLayout>
 

@@ -29,20 +29,20 @@ public class CwgApi extends BaseCwgApi{
 	private Boolean disableSession = false;
 	
 
-	public JSONObject callUrl(String Url, List<NameValuePair> params)
+	public String callUrl(String Url, List<NameValuePair> params)
 			throws DataFailed, DialogException {
 
-		JSONObject json = null;
+		String responseData = null;
 		Log.d(LOG_TAG, params.toString());
 
 		try {
 			if (isLogged()) {
 				Log.d(LOG_TAG, "IS LOGED:" + isLogged().toString());
-				json = call(Url, params);
+				responseData = call(Url, params);
 			} else {
 				login();
 				Log.d(LOG_TAG, "AFTER LOGIN LOGED:" + isLogged().toString());
-				json = call(Url, params);
+				responseData = call(Url, params);
 				/*
 				if (isLogged()) {
 					Log.d(LOG_TAG, "AFTER LOGIN IS LOGED:" + params.toString());
@@ -57,16 +57,16 @@ public class CwgApi extends BaseCwgApi{
 			throw new DialogException(e.getMessage());
 		}
 
-		return json;
+		return responseData;
 	}
 
-	public JSONObject call(String Url, List<NameValuePair> params)
+	public String call(String Url, List<NameValuePair> params)
 			throws DataFailed, YouMustFirstLogIn, InvalidUsernameOrPassword {
 
 		Uri.Builder UriBuilder = Uri.parse(Url).buildUpon();
-		Log.d(LOG_TAG, "disableSession: "+disableSession.toString());
+		//Log.d(LOG_TAG, "disableSession: "+disableSession.toString());
 		if (!disableSession) {
-			Log.d(LOG_TAG, "applySession " + Url);
+			//Log.d(LOG_TAG, "applySession " + Url);
 			UriBuilder.appendQueryParameter(ValueNames.SETTING_SESSION,
 					getSession());
 		}
@@ -80,12 +80,12 @@ public class CwgApi extends BaseCwgApi{
 
 		try {
 			if (params.size() > 0) {
-				Log.d(LOG_TAG, "executeHttpPost");
+				//Log.d(LOG_TAG, "executeHttpPost");
 				responseData = Communicator.executeHttpPost(UriBuilder, params);
 			} else {
-				Log.d(LOG_TAG, "executeHttpGet");
+				//Log.d(LOG_TAG, "executeHttpGet");
 				responseData = Communicator.executeHttpGet(UriBuilder);
-				Log.d(LOG_TAG, "after executeHttpGet");
+				//Log.d(LOG_TAG, "after executeHttpGet");
 			}
 		} catch (Exception e) {
 			Log.d(LOG_TAG, "call Exception:"+e.getMessage());
@@ -99,7 +99,7 @@ public class CwgApi extends BaseCwgApi{
 				json = new JSONObject(responseData);
 				Log.i(LOG_TAG, json.toString());
 				if (!json.getBoolean(Comm.API_SUCCESS_NAME)) {
-					Log.d(LOG_TAG, "UNSUCCESS");
+					//Log.d(LOG_TAG, "UNSUCCESS");
 
 					switch (json.getInt("ErrorCode")) {
 					case Exceptions.API_ERROR_103:
@@ -122,31 +122,34 @@ public class CwgApi extends BaseCwgApi{
 			}
 		}
 
-		return json;
+		return responseData;
 	}
 
 	protected String getSession() {
-		Log.d(LOG_TAG, "getSession");
+		//Log.d(LOG_TAG, "getSession");
 		SharedPreferences prefsRead = PreferenceManager
 				.getDefaultSharedPreferences(getContext());
 		String session = prefsRead.getString(ValueNames.SETTING_SESSION, "");
-		Log.d(LOG_TAG, "getSession return: "+session);
+		//Log.d(LOG_TAG, "getSession return: "+session);
 		return session;
 	}
 
 	private Boolean isLogged() throws LoginException, DialogException {
 
-		Log.d(LOG_TAG, "isLogged");
+		//Log.d(LOG_TAG, "isLogged");
 		
 		Boolean isLogged = false;
 
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			Log.w(LOG_TAG, "isLogged:call");
-			JSONObject json = call(Comm.API_URL_LOGININFO, params);
+			String responseData = call(Comm.API_URL_LOGININFO, params);
+			JSONObject json = new JSONObject(responseData);
+			
 			Log.w(LOG_TAG, "isLogged:json"+json.toString());
-			if (json.has(Comm.API_ERROR_NAME)) {
-				return json.optBoolean(Comm.API_ERROR_NAME);
+			if (json.has(Comm.API_SUCCESS_NAME)) {
+				Log.d(LOG_TAG, "isLogged:return:"+json.optBoolean(Comm.API_SUCCESS_NAME));
+				return json.optBoolean(Comm.API_SUCCESS_NAME);
 			}
 		} catch (Exception e) {
 			Log.d(LOG_TAG, "isLogged:Exception"+e.toString());
@@ -171,15 +174,17 @@ public class CwgApi extends BaseCwgApi{
 				prefsRead.getString("pref_password", "")));
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		
-		Log.d(LOG_TAG, "JSONLOGIN " + params.toString());
-		
 		JSONObject jsonLogin = null;
 
 		try {
-			Log.d(LOG_TAG, "JSONLOGIN " + jsonLogin);
 			disableSession = true;
-			jsonLogin = call(UriBuilder.toString(), params);
+			String responseData = call(UriBuilder.toString(), params);
+			try{
+				jsonLogin = new JSONObject(responseData);	
+			}catch(JSONException e){
+				throw new DataFailed(e.getMessage());
+			}
+			
 			if (jsonLogin.has(Comm.API_SESSION_NAME)) {
 				Log.d(LOG_TAG,
 						"JSONLOGIN "

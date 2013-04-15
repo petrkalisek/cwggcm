@@ -1,5 +1,7 @@
 package cz.gcm.cwg.activity;
 
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +40,6 @@ public class MainActivity extends BaseActivity {
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	        case R.id.setting:
-	        	
 	        	Intent intent = new Intent(this, SettingActivity.class);
 	        	Log.d("MainActivity::onOptionsItemSelected", "settying");
 	    		startActivity(intent);
@@ -47,14 +48,25 @@ public class MainActivity extends BaseActivity {
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
+	
+	public void settingActivity(View view){
+		Intent intent = new Intent(this, SettingActivity.class);
+    	Log.d("MainActivity::openSettingActivity", "settying");
+		startActivity(intent);
+	}
 
 
 	public void clickDefault(View view){
 		
 		
 		try{
+			CwgInfo cwgInfo = new CwgInfo("petrajana");
 			AsyncTaskActivity Async = new AsyncTaskActivity();
-			Async.execute(new CwgInfo("petrajana"));	
+			Async.execute(cwgInfo);
+			
+			JSONObject cwgInfoResult = cwgInfo.getResult();
+			Log.w("MainActivity::clickDefault", cwgInfoResult.toString());
+			
 		}catch( Exception e){
 			Log.w(this.getClass().toString(), e.getMessage());
 		}

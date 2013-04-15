@@ -7,6 +7,7 @@ public class Comm {
 	public static final String API_URL_LOGININFO = API_BASE_URL+"login-info";
 	//public static final String API_LOGIN_CWGINFO = "http://192.168.1.203/gc/cwgApi/index.php";
 	public static final String API_URL_CWGINFO = API_BASE_URL+"cwg/info";
+	public static final String API_URL_MY_COLLECTION = API_BASE_URL+"collection/export";
 	
 	public static final String API_SESSION_NAME = "Session";
 	public static final String API_USERNAME_NAME = "username";
