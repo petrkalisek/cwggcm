@@ -1,5 +1,6 @@
 package cz.gcm.cwg.comm;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +10,14 @@ import net.sf.json.xml.XMLSerializer;
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Binder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Xml;
 import cz.gcm.cwg.constants.Comm;
 import cz.gcm.cwg.constants.Exceptions;
 import cz.gcm.cwg.constants.ValueNames;
@@ -95,7 +98,7 @@ public class CwgApi extends BaseCwgApi{
 			throw new DataFailed(e.getMessage());
 		}
 
-		Log.d(LOG_TAG, "responseData:"+responseData.toString());
+		//Log.d(LOG_TAG, "responseData:"+responseData.toString());
 
 		if (responseData != null) {
 			try {
@@ -119,13 +122,16 @@ public class CwgApi extends BaseCwgApi{
 					Log.d(LOG_TAG, "SUCCESS");
 				}
 			} catch (JSONException e) {
+				Log.d(LOG_TAG, "ZKOUSIM PASER");
 				// e.printStackTrace();
 				JSON jsonString = null;
 				try{
-					XMLSerializer serializer = new XMLSerializer();  
-					jsonString = serializer.read( responseData );	
+					String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><cwgexport><user>PetrAJana</user><profile>http://test.cwg.gcm.cz/users/index/PetrAJana</profile><cwg id=\"3899\"><cat_no>cwg03511</cat_no><name>PetrAJana</name><category id=\"1\">Osobni CWG</category><version>1</version><image>http://cwg.gcm.cz/img/cwg03511.jpg</image><collection><entry><date>2011-05-05</date><year>2011</year><comment></comment><pieces>40</pieces></entry></collection><offers><pieces>5</pieces><comment></comment></offers></cwg></cwgexport>";
+					Log.d(LOG_TAG, "xmlString:"+xmlString.toString());
+					//XMLSerializer serializer = new XMLSerializer();  
+					//jsonString = serializer.read(xmlString);
 				}catch(Exception ex){
-					throw new DataFailed("XMLSerializer");
+					throw new DataFailed("XMLSerializer:"+ex.getMessage());
 				}
 				
 				

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -24,6 +25,7 @@ import android.util.Log;
 public class Communicator {
 
 	private static final String LOG_TAG = Communicator.class.getName();
+	private static final int contentLength = 16384;
 
 	static public String executeHttpPost(Uri.Builder URL, List<NameValuePair> params)
 			throws Exception {
@@ -34,17 +36,18 @@ public class Communicator {
 			HttpPost post = new HttpPost(URL.toString());
 			
 			StringEntity se = new StringEntity(params.toString());
-			se.setContentType("application/json;charset=UTF-8");
-			se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8")); 
+			se.setContentType("text/plain;charset=UTF-8");
+			se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "charset=UTF-8")); 
 			post.setEntity(new UrlEncodedFormEntity(params));
 
 			HttpClient client = new DefaultHttpClient();
-			
-			
 			HttpResponse response = client.execute(post);
 
+			HttpEntity responseEntity = response.getEntity();
+	        Log.d(LOG_TAG, responseEntity.getContentType().toString());
+	        
 			in = new BufferedReader(new InputStreamReader(response.getEntity()
-					.getContent()));
+					.getContent()), contentLength);
 
 			StringBuffer sb = new StringBuffer("");
 			String line = "";
@@ -57,7 +60,7 @@ public class Communicator {
 			
 			in.close();
 			String page = sb.toString();
-			Log.d(LOG_TAG, page);
+			//Log.d(LOG_TAG, page);
 			return page;
 		} finally {
 			if (in != null) {
@@ -85,8 +88,10 @@ public class Communicator {
 		
 			HttpResponse response = client.execute(request);
 			in = new BufferedReader(new InputStreamReader(response.getEntity()
-					.getContent()));
-			StringBuffer sb = new StringBuffer("");
+					.getContent()), contentLength);
+			
+			
+			StringBuffer sb = new StringBuffer();
 			String line = "";
 			while ((line = in.readLine()) != null) {
 				sb.append(line // + NL

@@ -1,7 +1,5 @@
 package cz.gcm.cwg.activity;
 
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,7 +8,6 @@ import android.widget.ListView;
 import com.example.cwggmc.R;
 
 import cz.gcm.cwg.comm.MyCollection;
-import cz.gcm.cwg.layouts.SimpleListItem;
 
 
 
@@ -27,9 +24,14 @@ public class MyCollectionActivity extends BaseActivity {
 			AsyncTaskActivity Async = new AsyncTaskActivity();
 			
 			/*
-			 * PROBLEM S XML a JSON
-			Async.execute(myCollection);
+			 * PROBLEM S XML a JSON */
+			try{
+				Async.execute(myCollection);
+			}catch( Exception e){
+				Log.w("MyCollectionActivity","Async.execute exception:" + e.toString());
+			}
 			
+			/*
 			JSONObject result = myCollection.getResult();
 			listenersList.setAdapter(new SimpleListItem(this, myCollection.getResult()));
 			Log.d("MyCollectionActivity","result:" + result.toString());
