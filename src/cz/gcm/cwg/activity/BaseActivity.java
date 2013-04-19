@@ -69,17 +69,12 @@ abstract class BaseActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(JSONObject result) {
-			TextView txt = (TextView) findViewById(R.id.response);
-			Log.d("onPostExecute", result.toString());
-			txt.setText("Executed:" + result);
 			this.progressDialog.dismiss();
 		}
 
 		@Override
 		protected void onProgressUpdate(String... values) {
 			Log.d("TAG2", values.toString());
-			this.progressDialog.setMessage("onProgressUpdate:"
-					+ ApiResult.resultCallback());
 		}
 	}
 

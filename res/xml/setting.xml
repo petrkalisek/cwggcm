@@ -11,21 +11,21 @@
             android:key="pref_login"
             android:summary="@string/pref_loginUserSummary"
             android:title="@string/pref_loginUserTitle"
-            android:hint="@string/pref_loginUserSummary"
-            android:defaultValue="false" />
+            android:hint="@string/pref_loginUserTitle"
+            android:defaultValue="" />
         <EditTextPreference
             android:key="pref_password"
             android:summary="@string/pref_loginPasswordSummary"
             android:title="@string/pref_loginPasswordTitle"
-            android:hint="@string/pref_loginPasswordSummary"
-            android:defaultValue="false" />
+            android:hint="@string/pref_loginPasswordTitle"
+            android:defaultValue="" />
         
         <EditTextPreference
             android:key="session"
             android:summary="@string/pref_loginPasswordSummary"
             android:title="@string/pref_loginPasswordTitle"
-            android:hint="@string/pref_loginPasswordSummary"
-            android:defaultValue="false" />
+            android:hint="@string/pref_loginPasswordTitle"
+            android:defaultValue="" />
         <EditTextPreference
             android:key="loginFailedCnt"
             android:defaultValue="0" />

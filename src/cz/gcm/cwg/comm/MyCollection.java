@@ -3,12 +3,8 @@ package cz.gcm.cwg.comm;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.json.JSON;
-import net.sf.json.xml.XMLSerializer;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -29,12 +25,10 @@ public class MyCollection extends CwgApi {
 			params.add(new BasicNameValuePair("format", "fullxml"));
 			Log.i(LOG_TAG, params.toString());
 			
-			String responseData = callUrl(Comm.API_URL_MY_COLLECTION, params);
-			XMLSerializer xmlSerializer = new XMLSerializer(); 
-            JSON json = xmlSerializer.read( responseData );  
+			JSONObject responseJson = callUrl(Comm.API_URL_MY_COLLECTION, params);
+			
             
-            
-			Log.i(LOG_TAG, json.toString());
+			Log.i(LOG_TAG, responseJson.toString());
 			return jsonCwgInfo;
 			/*
 			try{

@@ -14,6 +14,7 @@ import com.example.cwggmc.R;
 
 import cz.gcm.cwg.comm.CwgInfo;
 
+
 public class MainActivity extends BaseActivity {
 
 	
@@ -31,8 +32,13 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	public void clickMyCollection(View view){
-		Intent intent = new Intent(this, MyCollectionActivity.class);
-		startActivity(intent);
+		try{
+			Intent intent = new Intent(this, MyCollectionActivity.class);
+			startActivity(intent);	
+		}catch( Exception e){
+			Log.w("MainActivity::clickMyCollection", e.getMessage());
+		}
+		
 	}
 	
 	@Override

@@ -31,18 +31,11 @@ public class CwgInfo extends CwgApi {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("name", name));
 	
-			String responseData = callUrl(Comm.API_URL_CWGINFO, params);
-			try{
-				jsonCwgInfo = new JSONObject(responseData);	
-			}catch(JSONException e){
-				throw new DataFailed(e.getMessage());
-			}
-			try{
-				if(jsonCwgInfo.getInt(Comm.API_ERROR_NAME) > 0){
-					return jsonCwgInfo; 
-				}
-			}catch(JSONException e){
-				Log.d(LOG_TAG, "JSONException:"+jsonCwgInfo.toString());
+			JSONObject responseJson = callUrl(Comm.API_URL_CWGINFO, params);
+			
+			Log.d(LOG_TAG, "responseJson:"+responseJson.toString());
+			if(responseJson.optInt(Comm.API_ERROR_NAME) > 0){
+				return jsonCwgInfo; 
 			}
 		} catch (LoginException e) {
 			Log.w(LOG_TAG, e.getMessage());
