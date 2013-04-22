@@ -30,7 +30,7 @@ public class SimpleListItem implements ListAdapter {
 	}
 
 	public JSONObject data() {
-		return new JSONObject();
+		return data;
 	}
 
 

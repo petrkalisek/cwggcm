@@ -29,6 +29,7 @@ public class Communicator {
 			throws Exception {
 		BufferedReader in = null;
 		Log.d(LOG_TAG, "executeHttpPost:"+URL.toString());
+		Log.d(LOG_TAG, "executeHttpPost:"+params.toString());
 		try {
 			
 			HttpPost post = new HttpPost(URL.toString());
@@ -72,7 +73,7 @@ public class Communicator {
 
 	static public String executeHttpGet(Uri.Builder URL) throws Exception {
 		BufferedReader in = null;
-		
+		Log.d(LOG_TAG, "executeHttpGet:"+URL.toString());
 		try {
 		
 			HttpClient client = new DefaultHttpClient();

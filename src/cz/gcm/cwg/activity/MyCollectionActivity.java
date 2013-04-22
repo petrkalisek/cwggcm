@@ -25,15 +25,14 @@ public class MyCollectionActivity extends BaseActivity {
 		try{
 			MyCollection myCollection = new MyCollection();
 			AsyncTaskActivity Async = new AsyncTaskActivity();
-			
-			/*
-			 * PROBLEM S XML a JSON
 			Async.execute(myCollection);
 			
+			/*
 			JSONObject result = myCollection.getResult();
 			listenersList.setAdapter(new SimpleListItem(this, myCollection.getResult()));
 			Log.d("MyCollectionActivity","result:" + result.toString());
 			*/
+			
 			//listenersList.setAdapter(new SimpleListItem(this, CwgInfo.getCwgInfo("petrajana")));
 		}catch(Exception e){
 			

@@ -26,13 +26,18 @@ public class MyCollection extends CwgApi {
 		
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("format", "fullxml"));
+			params.add(new BasicNameValuePair("format", "json"));
 			Log.i(LOG_TAG, params.toString());
 			
 			String responseData = callUrl(Comm.API_URL_MY_COLLECTION, params);
-			XMLSerializer xmlSerializer = new XMLSerializer(); 
-            JSON json = xmlSerializer.read( responseData );  
-            
+			
+			JSONObject json = new JSONObject();
+			try{
+				json = new JSONObject(responseData);	
+			}catch(JSONException e){
+				
+			}
+			 
             
 			Log.i(LOG_TAG, json.toString());
 			return jsonCwgInfo;
