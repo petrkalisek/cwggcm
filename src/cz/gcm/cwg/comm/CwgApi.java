@@ -1,17 +1,23 @@
 package cz.gcm.cwg.comm;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.json.JSON;
+import net.sf.json.xml.XMLSerializer;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Binder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Xml;
 import cz.gcm.cwg.constants.Comm;
 import cz.gcm.cwg.constants.Exceptions;
 import cz.gcm.cwg.constants.ValueNames;
@@ -29,10 +35,10 @@ public class CwgApi extends BaseCwgApi{
 	private Boolean disableSession = false;
 	
 
-	public String callUrl(String Url, List<NameValuePair> params)
+	public JSONObject callUrl(String Url, List<NameValuePair> params)
 			throws DataFailed, DialogException {
 
-		String responseData = null;
+		JSONObject responseData = null;
 		Log.d(LOG_TAG, params.toString());
 
 		try {
@@ -60,7 +66,7 @@ public class CwgApi extends BaseCwgApi{
 		return responseData;
 	}
 
-	public String call(String Url, List<NameValuePair> params)
+	public JSONObject call(String Url, List<NameValuePair> params)
 			throws DataFailed, YouMustFirstLogIn, InvalidUsernameOrPassword {
 
 		Uri.Builder UriBuilder = Uri.parse(Url).buildUpon();
@@ -92,7 +98,7 @@ public class CwgApi extends BaseCwgApi{
 			throw new DataFailed(e.getMessage());
 		}
 
-		Log.d(LOG_TAG, "responseData:"+responseData.toString());
+		//Log.d(LOG_TAG, "responseData:"+responseData.toString());
 
 		if (responseData != null) {
 			try {
@@ -116,13 +122,26 @@ public class CwgApi extends BaseCwgApi{
 					Log.d(LOG_TAG, "SUCCESS");
 				}
 			} catch (JSONException e) {
+				Log.d(LOG_TAG, "ZKOUSIM PASER");
 				// e.printStackTrace();
+				JSON jsonString = null;
+				try{
+					String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><cwgexport><user>PetrAJana</user><profile>http://test.cwg.gcm.cz/users/index/PetrAJana</profile><cwg id=\"3899\"><cat_no>cwg03511</cat_no><name>PetrAJana</name><category id=\"1\">Osobni CWG</category><version>1</version><image>http://cwg.gcm.cz/img/cwg03511.jpg</image><collection><entry><date>2011-05-05</date><year>2011</year><comment></comment><pieces>40</pieces></entry></collection><offers><pieces>5</pieces><comment></comment></offers></cwg></cwgexport>";
+					Log.d(LOG_TAG, "xmlString:"+xmlString.toString());
+					//XMLSerializer serializer = new XMLSerializer();  
+					//jsonString = serializer.read(xmlString);
+				}catch(Exception ex){
+					throw new DataFailed("XMLSerializer:"+ex.getMessage());
+				}
+				
+				
 				Log.w(LOG_TAG, "JSONException:"+e.toString());
+				Log.d(LOG_TAG, "jsonString:"+jsonString.toString());
 				throw new DataFailed("JSONException");
 			}
 		}
 
-		return responseData;
+		return json;
 	}
 
 	protected String getSession() {
@@ -143,8 +162,7 @@ public class CwgApi extends BaseCwgApi{
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			Log.w(LOG_TAG, "isLogged:call");
-			String responseData = call(Comm.API_URL_LOGININFO, params);
-			JSONObject json = new JSONObject(responseData);
+			JSONObject json = call(Comm.API_URL_LOGININFO, params);
 			
 			Log.w(LOG_TAG, "isLogged:json"+json.toString());
 			if (json.has(Comm.API_SUCCESS_NAME)) {
@@ -178,12 +196,7 @@ public class CwgApi extends BaseCwgApi{
 
 		try {
 			disableSession = true;
-			String responseData = call(UriBuilder.toString(), params);
-			try{
-				jsonLogin = new JSONObject(responseData);	
-			}catch(JSONException e){
-				throw new DataFailed(e.getMessage());
-			}
+			jsonLogin = call(UriBuilder.toString(), params);
 			
 			if (jsonLogin.has(Comm.API_SESSION_NAME)) {
 				Log.d(LOG_TAG,
