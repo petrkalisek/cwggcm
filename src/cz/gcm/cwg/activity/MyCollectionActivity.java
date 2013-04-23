@@ -22,6 +22,23 @@ public class MyCollectionActivity extends BaseActivity {
 		setContentView(R.layout.activity_my_collection);
 		
 		ListView listenersList = (ListView)findViewById(R.id.cwgList);
+		try{
+			MyCollection myCollection = new MyCollection();
+			AsyncTaskActivity Async = new AsyncTaskActivity();
+			
+			try{
+				JSONObject myCollectionResult = Async.execute(myCollection).get();
+				//listenersList.setAdapter(new SimpleListItem(this, myCollection.getResult()));
+				Log.d("MyCollectionActivity::jsonResult",myCollectionResult.toString());
+				
+				//listenersList.setAdapter(new SimpleListItem(this, CwgInfo.getCwgInfo("petrajana")));
+			}catch( Exception e){
+				Log.w("MyCollectionActivity","Async.execute exception:" + e.toString());
+			}
+		}catch(Exception e){
+			
+		}
+		 
 	}
 
 	@Override

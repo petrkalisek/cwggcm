@@ -33,8 +33,6 @@ public class BaseCwgApi {
 		
 		return object;
 	}
-	
-	public void login() throws DataFailed, DialogException {}
-	
+
 	
 }

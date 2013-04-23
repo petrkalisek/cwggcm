@@ -12,9 +12,7 @@ import android.view.View;
 
 import com.example.cwggmc.R;
 
-import cz.gcm.cwg.activity.BaseActivity.AsyncTaskActivity;
 import cz.gcm.cwg.comm.CwgInfo;
-import cz.gcm.cwg.comm.MyCollection;
 
 
 public class MainActivity extends BaseActivity {
@@ -35,25 +33,8 @@ public class MainActivity extends BaseActivity {
 	
 	public void clickMyCollection(View view){
 		try{
-			try{
-				MyCollection myCollection = new MyCollection();
-				AsyncTaskActivity Async = new AsyncTaskActivity();
-				
-				try{
-					JSONObject myCollectionResult = Async.execute(myCollection).get();
-					//listenersList.setAdapter(new SimpleListItem(this, myCollection.getResult()));
-					Log.d("MyCollectionActivity::jsonResult",myCollectionResult.toString());
-					Intent intent = new Intent(this, MyCollectionActivity.class);
-					startActivity(intent);	
-					//listenersList.setAdapter(new SimpleListItem(this, CwgInfo.getCwgInfo("petrajana")));
-				}catch( Exception e){
-					Log.w("MyCollectionActivity","Async.execute exception:" + e.toString());
-				}
-			}catch(Exception e){
-				
-			}
-			
-			
+			Intent intent = new Intent(this, MyCollectionActivity.class);
+			startActivity(intent);	
 		}catch( Exception e){
 			Log.w("MainActivity::clickMyCollection", e.getMessage());
 		}
