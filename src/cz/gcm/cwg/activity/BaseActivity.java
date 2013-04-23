@@ -8,15 +8,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cwggmc.R;
 
-import cz.gcm.cwg.comm.ApiResult;
 import cz.gcm.cwg.comm.BaseCwgApi;
 
 abstract class BaseActivity extends Activity {
 
+	private BaseCwgApi calledObject = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,29 +35,29 @@ abstract class BaseActivity extends Activity {
 
 		ProgressDialog progressDialog = new ProgressDialog(BaseActivity.this);
 
-		@Override
+		protected void onCreate(){
+			Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_LONG).show();
+		}
+		
 		protected void onPreExecute() {
+			Toast.makeText(getApplicationContext(), "onPreExecute", Toast.LENGTH_LONG).show();
 			this.progressDialog.setCancelable(true);
 			this.progressDialog.setMessage("Loading data, please wait...");
 			this.progressDialog.show();
-
 		}
 
 		@Override
 		protected JSONObject doInBackground(BaseCwgApi... object) {
-
+			
 			JSONObject jsonResult = new JSONObject();
 			
+			
 			try{
-				BaseCwgApi calledObject = object[0];
-				
+				calledObject = object[0];
 				//TODO: hardcore for shared prefs 
 				calledObject.setContext(getApplicationContext());
-				
 				Log.d("TAG1", calledObject.toString());
-				
 				jsonResult = calledObject.getResult();	
-				
 				Log.d("TAG2", jsonResult.toString());
 				//return calledObject.getResult();	
 			}catch( Exception e){
@@ -64,17 +65,23 @@ abstract class BaseActivity extends Activity {
 				
 			}
 			
+			Log.d("doInBackground:return", jsonResult.toString());
+			
 			return jsonResult;
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject result) {
-			this.progressDialog.dismiss();
+			if (this.progressDialog.isShowing()) {
+				this.progressDialog.dismiss();
+	        }
+			Toast.makeText(getApplicationContext(), "onPostExecute", Toast.LENGTH_LONG).show();
 		}
 
 		@Override
 		protected void onProgressUpdate(String... values) {
 			Log.d("TAG2", values.toString());
+			Toast.makeText(getApplicationContext(), "onProgressUpdate", Toast.LENGTH_LONG).show();
 		}
 	}
 

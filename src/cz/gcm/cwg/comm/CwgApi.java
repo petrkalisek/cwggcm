@@ -122,21 +122,6 @@ public class CwgApi extends BaseCwgApi{
 					Log.d(LOG_TAG, "SUCCESS");
 				}
 			} catch (JSONException e) {
-				Log.d(LOG_TAG, "ZKOUSIM PASER");
-				// e.printStackTrace();
-				JSON jsonString = null;
-				try{
-					String xmlString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><cwgexport><user>PetrAJana</user><profile>http://test.cwg.gcm.cz/users/index/PetrAJana</profile><cwg id=\"3899\"><cat_no>cwg03511</cat_no><name>PetrAJana</name><category id=\"1\">Osobni CWG</category><version>1</version><image>http://cwg.gcm.cz/img/cwg03511.jpg</image><collection><entry><date>2011-05-05</date><year>2011</year><comment></comment><pieces>40</pieces></entry></collection><offers><pieces>5</pieces><comment></comment></offers></cwg></cwgexport>";
-					Log.d(LOG_TAG, "xmlString:"+xmlString.toString());
-					//XMLSerializer serializer = new XMLSerializer();  
-					//jsonString = serializer.read(xmlString);
-				}catch(Exception ex){
-					throw new DataFailed("XMLSerializer:"+ex.getMessage());
-				}
-				
-				
-				Log.w(LOG_TAG, "JSONException:"+e.toString());
-				Log.d(LOG_TAG, "jsonString:"+jsonString.toString());
 				throw new DataFailed("JSONException");
 			}
 		}
@@ -169,6 +154,8 @@ public class CwgApi extends BaseCwgApi{
 				Log.d(LOG_TAG, "isLogged:return:"+json.optBoolean(Comm.API_SUCCESS_NAME));
 				return json.optBoolean(Comm.API_SUCCESS_NAME);
 			}
+		} catch (InvalidUsernameOrPassword e) {
+			throw new LoginException(e.getMessage());
 		} catch (Exception e) {
 			Log.d(LOG_TAG, "isLogged:Exception"+e.toString());
 			Log.w(LOG_TAG, e.getMessage());
