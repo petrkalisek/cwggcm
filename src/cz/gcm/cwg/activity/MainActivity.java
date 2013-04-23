@@ -13,6 +13,7 @@ import android.view.View;
 import com.example.cwggmc.R;
 
 import cz.gcm.cwg.comm.CwgInfo;
+import cz.gcm.cwg.database.BaseItem;
 
 
 public class MainActivity extends BaseActivity {
@@ -21,6 +22,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		BaseItem bi = new BaseItem();
 		setContentView(R.layout.activity_main);
 	}
 	

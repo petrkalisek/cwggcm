@@ -1,7 +1,8 @@
 package cz.gcm.cwg.layouts;
 
-import java.util.Iterator;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,25 +22,31 @@ public class SimpleListItem implements ListAdapter {
 	public LayoutInflater mInflater=null;
 	public int type = 0;
 	private Context context = null;
-	private JSONObject data = null;
+	private JSONArray data = null;
 
-	public SimpleListItem(Context contextIncome, JSONObject dataIncome) {
+	public SimpleListItem(Context contextIncome, JSONArray dataIncome) {
 		context = contextIncome;
 		data = dataIncome;
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	public JSONObject data() {
+	public JSONArray data() {
 		return data;
 	}
 
 
+	public static class ViewHolder{
+	    public TextView name;
+	    public TextView message;
+	}
 
 	@Override
-	public View getView(int arg0, View arg1, ViewGroup arg2) {
-		//JSONObject bean = getItem(arg0);
+	public View getView(int position, View convertView, ViewGroup parent) {
+		
+		JSONObject bean = getItem(position);
 
-		View row = arg1;
+	    
+		View row = convertView;
 		
 		if (row == null) {
 			row = mInflater.inflate(R.layout.simple_list_item,	null);

@@ -31,10 +31,10 @@ public class CwgInfo extends CwgApi {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("name", name));
 	
-			JSONObject responseJson = callUrl(Comm.API_URL_CWGINFO, params);
+			jsonCwgInfo = callUrl(Comm.API_URL_CWGINFO, params);
 			
-			Log.d(LOG_TAG, "responseJson:"+responseJson.toString());
-			if(responseJson.optInt(Comm.API_ERROR_NAME) > 0){
+			Log.d(LOG_TAG, "responseJson:"+jsonCwgInfo.toString());
+			if(jsonCwgInfo.optInt(Comm.API_ERROR_NAME) > 0){
 				return jsonCwgInfo; 
 			}
 		} catch (LoginException e) {
@@ -42,6 +42,10 @@ public class CwgInfo extends CwgApi {
 		} catch (DialogException e) {
 			Log.w(LOG_TAG, e.getMessage());
 		}
+		
+		Log.w(LOG_TAG, "getResult:return "+jsonCwgInfo.toString());
+		
+		
 		return jsonCwgInfo;
 	
 	}
