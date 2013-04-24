@@ -93,19 +93,7 @@ public class MyCollectionActivity extends BaseActivity {
 					Cursor c = cwg.getAllCwg();
 					startManagingCursor(c);
 					
-					while(c.moveToNext()){
-						Log.i("cwg.getAllCwg()", c.getString(c.getColumnIndexOrThrow(Cwg.COLUMN_CWGNO)));
-					}
-					
-					Log.i("cwg.getAllCwg():Cursor", cwg.getAllCwg().toString());
-					
 					listenersList.setAdapter(new SimpleListItem(this, c ));
-
-					/*
-					 * 
-					 * listenersList.postInvalidate();
-					 * listenersList.invalidateViews();
-					 */
 				}
 				
 				

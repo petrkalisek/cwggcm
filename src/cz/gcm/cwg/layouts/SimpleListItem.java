@@ -1,14 +1,16 @@
 package cz.gcm.cwg.layouts;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -17,7 +19,8 @@ import com.example.cwggmc.R;
 
 import cz.gcm.cwg.database.items.Cwg;
 
-public class SimpleListItem implements ListAdapter {
+//OnLongClickListener
+public class SimpleListItem implements ListAdapter, OnClickListener   {
 
 	
 	public LayoutInflater mInflater=null;
@@ -47,13 +50,7 @@ public class SimpleListItem implements ListAdapter {
 			row = mInflater.inflate(R.layout.simple_list_item,	null);
 		}
 		
-		Log.d("SimpleListItem:getView:CursorgetPosition", ""+data.getPosition());
-		Log.d("SimpleListItem:getView:position", ""+position);
-		
 		if( data.moveToPosition(position) ){
-			
-			Log.i("moveToPosition("+position+")", data.toString());
-			
 			TextView txtTitle = (TextView) row.findViewById(R.id.title);
 			TextView txtDesc = (TextView) row.findViewById(R.id.desc);
 			TextView id = (TextView) row.findViewById(R.id.viewId);
@@ -62,16 +59,28 @@ public class SimpleListItem implements ListAdapter {
 			txtDesc.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_CWGNO)));
 			id.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID)));
 		}
-		
-		
-
-	    
-		
-		/*
-		
-		*/
 		return row;
 	}
+	
+	@Override
+	public void onClick(View v) {
+		Log.d("onClick", v.findViewById(R.id.viewId).toString());
+		AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+		alertDialog.setTitle("Click");
+		alertDialog.show();
+		
+	}
+	
+	@Override
+	public long getItemId(int position) {
+		return getItem(position).getLong(Cwg.COLUMN_ID);
+	}
+	
+	public Bundle getItem(int position){
+		data.moveToPosition(position);
+		return data.getExtras();
+	}
+	
 /*
 	@Override
 	public boolean onLongClick(View v) {
@@ -176,39 +185,7 @@ public class SimpleListItem implements ListAdapter {
 	public boolean isEmpty() {
 		return false;
 	}
-	
-	@Override
-	public JSONObject getItem(int id) {
 		
-		return new JSONObject();
-		
-		/*
-		JSONObject country = data.getJSONObject(id);
-		
-		
-		Iterator keys = data.keys();
-
-	    while(keys.hasNext()) {
-	        // loop to get the dynamic key
-	        String currentDynamicKey = (String)keys.next();
-
-	        // get the value of the dynamic key
-	        JSONObject currentDynamicValue = data.getJSONObject(currentDynamicKey);
-
-	        // do something here with the value...
-	    }*/
-	}
-
-	@Override
-	public long getItemId(int arg0) {
-		try {
-			return getItem(arg0).getLong("id");
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return 0;
-		}
-	}
-	
 	@Override
 	public int getItemViewType( int number) {
 		return number;
