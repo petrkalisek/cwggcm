@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="string_empty"></string>
     <string name="app_name">Cwg GMC</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
@@ -24,7 +25,13 @@
     <string name="pref_storageTitle">Storage</string>
     <string name="pref_enableLocalDbSummary">Enable local database for faster loading. Data are updated ONLY by show detail item (experimental)</string>
     <string name="pref_enableLocalDbTitle">Enable local database</string>
-    <string name="string_empty"></string>
+    
+    <!-- connection setting -->
+    <string name="pref_connectionTitle">Connection</string>
+    <string name="pref_alwaysOnlineTitle">Always online</string>
+    <string name="pref_alwaysOnlineSummary">All data are downloaded from the Internet directly</string>
+    <string name="pref_useCacheDataTitle">Use cache data</string>
+    <string name="pref_useCacheDataSummary">If the data in the cache, use the without download from the intenet database. Manual updates may be used</string>
 
     <!-- menu -->
     <string name="button_getMyTitle">Get my</string>

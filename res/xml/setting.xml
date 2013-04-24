@@ -20,18 +20,29 @@
             android:hint="@string/pref_loginPasswordTitle"
             android:defaultValue="" />
         
+		<!-- TODO: DEBUG -->        
         <EditTextPreference
             android:key="session"
-            android:summary="@string/pref_loginPasswordSummary"
-            android:title="@string/pref_loginPasswordTitle"
-            android:hint="@string/pref_loginPasswordTitle"
+            android:title="Session"
             android:defaultValue="" />
-        <EditTextPreference
-            android:key="loginFailedCnt"
-            android:defaultValue="0" />
-        
     </PreferenceCategory>
-    
+
+    <PreferenceCategory 
+        android:title="@string/pref_connectionTitle"
+        android:key="setting_key_connection"
+        android:enabled="true" >
+        <CheckBoxPreference
+            android:key="pref_alwaysOnline"
+            android:summary="@string/pref_alwaysOnlineSummary"
+            android:title="@string/pref_alwaysOnlineTitle"
+            android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="pref_useCacheData"
+            android:summary="@string/pref_useCacheDataSummary"
+            android:title="@string/pref_useCacheDataTitle"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+    <!-- 
     <PreferenceCategory 
         android:title="@string/pref_storageTitle"
         android:key="setting_key_storage"
@@ -43,5 +54,5 @@
             android:hint="@string/pref_enableLocalDbSummary"
             android:defaultValue="false" />
     </PreferenceCategory>
-    
+     -->
 </PreferenceScreen>

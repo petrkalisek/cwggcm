@@ -3,25 +3,39 @@ package cz.gcm.cwg.activity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.cwggmc.R;
 
 import cz.gcm.cwg.comm.MyCollection;
-import cz.gcm.cwg.database.Cwg;
+import cz.gcm.cwg.database.items.Cwg;
+import cz.gcm.cwg.layouts.SimpleListItem;
 
 public class MyCollectionActivity extends BaseActivity {
 
+	private ProgressDialog progressDialog;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_collection);
-
+		
+	}
+	
+	@Override
+	protected void onStart(){
+		super.onStart();
+		
+		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		try {
 			MyCollection myCollection = new MyCollection();
@@ -30,8 +44,7 @@ public class MyCollectionActivity extends BaseActivity {
 			try {
 				JSONObject myCollectionResult = Async.execute(myCollection)
 						.get();
-				// listenersList.setAdapter(new SimpleListItem(this,
-				// myCollection.getResult()));
+				
 				Log.d("MyCollectionActivity::jsonResult",
 						myCollectionResult.toString());
 
@@ -77,14 +90,25 @@ public class MyCollectionActivity extends BaseActivity {
 						
 						
 					}
+					Cursor c = cwg.getAllCwg();
+					startManagingCursor(c);
+					
+					while(c.moveToNext()){
+						Log.i("cwg.getAllCwg()", c.getString(c.getColumnIndexOrThrow(Cwg.COLUMN_CWGNO)));
+					}
+					
+					Log.i("cwg.getAllCwg():Cursor", cwg.getAllCwg().toString());
+					
+					listenersList.setAdapter(new SimpleListItem(this, c ));
 
 					/*
-					 * listenersList.setAdapter(new SimpleListItem(this,
-					 * myCollectionResult.optJSONArray("Export")));
+					 * 
 					 * listenersList.postInvalidate();
 					 * listenersList.invalidateViews();
 					 */
 				}
+				
+				
 
 			} catch (Exception e) {
 				Log.w("MyCollectionActivity",
@@ -101,6 +125,11 @@ public class MyCollectionActivity extends BaseActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.my_cwg, menu);
 		return true;
+	}
+	
+	
+	public void refreshData(View view){
+		Toast.makeText(getApplicationContext(), "refreshData", Toast.LENGTH_LONG).show();
 	}
 
 }

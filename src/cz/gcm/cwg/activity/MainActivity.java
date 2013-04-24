@@ -69,9 +69,9 @@ public class MainActivity extends BaseActivity {
 		try{
 			CwgInfo cwgInfo = new CwgInfo("petrajana");
 			AsyncTaskActivity Async = new AsyncTaskActivity();
-			Async.execute(cwgInfo);
+			JSONObject cwgInfoResult = Async.execute(cwgInfo).get();
 			
-			JSONObject cwgInfoResult = cwgInfo.getResult();
+			
 			Log.w("MainActivity::clickDefault", cwgInfoResult.toString());
 			
 		}catch( Exception e){

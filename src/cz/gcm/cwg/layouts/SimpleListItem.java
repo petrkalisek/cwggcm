@@ -1,13 +1,12 @@
 package cz.gcm.cwg.layouts;
 
-import java.util.List;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,23 +15,23 @@ import android.widget.TextView;
 
 import com.example.cwggmc.R;
 
+import cz.gcm.cwg.database.items.Cwg;
+
 public class SimpleListItem implements ListAdapter {
 
 	
 	public LayoutInflater mInflater=null;
 	public int type = 0;
 	private Context context = null;
-	private JSONArray data = null;
+	private Cursor data;
 
-	public SimpleListItem(Context contextIncome, JSONArray dataIncome) {
+	public SimpleListItem(Context contextIncome, Cursor dataIncome) {
 		context = contextIncome;
 		data = dataIncome;
+		data.moveToFirst();
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	public JSONArray data() {
-		return data;
-	}
 
 
 	public static class ViewHolder{
@@ -43,23 +42,34 @@ public class SimpleListItem implements ListAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		JSONObject bean = getItem(position);
-
-	    
 		View row = convertView;
-		
 		if (row == null) {
 			row = mInflater.inflate(R.layout.simple_list_item,	null);
 		}
 		
-		TextView txtTitle = (TextView) row.findViewById(R.id.title);
-		TextView txtDesc = (TextView) row.findViewById(R.id.desc);
-		TextView id = (TextView) row.findViewById(R.id.viewId);
+		Log.d("SimpleListItem:getView:CursorgetPosition", ""+data.getPosition());
+		Log.d("SimpleListItem:getView:position", ""+position);
 		
-		txtTitle.setText("title");
-		txtDesc.setText("desc");
-		id.setText(1);
+		if( data.moveToPosition(position) ){
+			
+			Log.i("moveToPosition("+position+")", data.toString());
+			
+			TextView txtTitle = (TextView) row.findViewById(R.id.title);
+			TextView txtDesc = (TextView) row.findViewById(R.id.desc);
+			TextView id = (TextView) row.findViewById(R.id.viewId);
+			
+			txtTitle.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_NAME)));
+			txtDesc.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_CWGNO)));
+			id.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID)));
+		}
 		
+		
+
+	    
+		
+		/*
+		
+		*/
 		return row;
 	}
 /*
@@ -156,7 +166,7 @@ public class SimpleListItem implements ListAdapter {
 
 	@Override
 	public int getCount() {
-		return data.length();
+		return data.getCount();
 	}
 	
 	// interface
