@@ -83,6 +83,7 @@ abstract class BaseActivity extends Activity {
 			Log.d("TAG2", values.toString());
 			Toast.makeText(getApplicationContext(), "onProgressUpdate", Toast.LENGTH_LONG).show();
 		}
+		
 	}
 
 }

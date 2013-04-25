@@ -36,12 +36,6 @@ public class SimpleListItem implements ListAdapter, OnClickListener   {
 	}
 
 
-
-	public static class ViewHolder{
-	    public TextView name;
-	    public TextView message;
-	}
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
@@ -183,7 +177,11 @@ public class SimpleListItem implements ListAdapter, OnClickListener   {
 	
 	@Override
 	public boolean isEmpty() {
-		return false;
+		if(data.getCount() > 0){
+			return false;
+		}else{
+			return true;
+		}
 	}
 		
 	@Override

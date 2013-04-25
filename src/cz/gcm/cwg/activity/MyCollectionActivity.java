@@ -24,6 +24,7 @@ import cz.gcm.cwg.layouts.SimpleListItem;
 public class MyCollectionActivity extends BaseActivity {
 
 	private ProgressDialog progressDialog;
+	private Cwg cwg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,10 @@ public class MyCollectionActivity extends BaseActivity {
 
 	@Override
 	protected void onStart() {
+		cwg = new Cwg(this);
 		super.onStart();
+		cwg.onClose();
+		cwg.onStart();
 		loadData(false);
 	}
 
@@ -52,14 +56,20 @@ public class MyCollectionActivity extends BaseActivity {
 		loadData(true);
 	}
 
+	public void onBackPressed() {
+		super.onBackPressed();
+	};
+
+	public void startActivityForResult() {
+		Log.d("MyCollectionActivity::startActivityForResult", "CLICK BACK");
+	}
+
 	private void loadData(Boolean force) {
 		SharedPreferences prefsRead = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 
 		Boolean useCacheData = prefsRead.getBoolean("pref_useCacheData", false);
 		Log.d("useCacheData", useCacheData.toString());
-
-		Cwg cwg = new Cwg(this);
 
 		if (!useCacheData || force) {
 			try {
@@ -124,9 +134,23 @@ public class MyCollectionActivity extends BaseActivity {
 
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor c = cwg.getAllCwg();
-		startManagingCursor(c);
 		listenersList.setAdapter(new SimpleListItem(this, c));
-		cwg.close();
+
+	}
+
+	@Override
+	protected void onStop() {
+		cwg.onClose();
+		Log.i("MyCollectionActivity", "onStop");
+		super.onStop();
+
+	}
+
+	@Override
+	protected void onPause() {
+		cwg.onClose();
+		Log.i("MyCollectionActivity", "onPause");
+		super.onPause();
 	}
 
 }

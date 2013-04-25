@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import cz.gcm.cwg.constants.Database;
 
 public class Cwg {
@@ -21,40 +22,49 @@ public class Cwg {
 	public static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS "
 			+ TABLE_NAME + "(" + COLUMN_ID + " integer primary key " + ", "
 			+ COLUMN_CWGNO + " text not null" + ", " + COLUMN_VERSION
-			+ " int not null" + ", " + COLUMN_NAME + " text not null" + ", "
+			+ " int not null" + ", " + COLUMN_NAME + " text not null collate nocase " + ", "
 			+ COLUMN_IMAGE + " text not null" + ");";
 	
 	protected static final String ORDER_BY = COLUMN_NAME + " ASC";
 
-	private SQLiteOpenHelper openHelper;
+	private SQLiteOpenHelper openHelper = null;
+	private SQLiteDatabase writableDb = null;
+	private SQLiteDatabase readableDb = null;
+	private Cursor cursor = null;
 
 	public Cwg(Context ctx) {
 		openHelper = new DatabaseHelper(ctx);
 	}
+	
+	public void onStart(){
+		Log.d("Cwg::onStart", "onStart");
+		writableDb = openHelper.getWritableDatabase();
+		readableDb = openHelper.getReadableDatabase();
+	}
 
 	public Cursor getAllCwg() {
-		SQLiteDatabase db = openHelper.getReadableDatabase();
-		return db.query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
+		cursor = readableDb.query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
+		return cursor;
 	}
 
 	public Cursor getCwg(long id) {
-		SQLiteDatabase db = openHelper.getReadableDatabase();
+		Log.d("Cwg::getCwg", "id:"+id);
 		String[] selectionArgs = { String.valueOf(id) };
-		return db.query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
+		cursor = readableDb.query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
 				null, null, ORDER_BY);
+		
+		Log.d("Cwg::db.getPath()", readableDb.getPath());
+		return cursor;
 	}
 
 	public boolean deleteCwg(long id) {
-		SQLiteDatabase db = openHelper.getWritableDatabase();
 		String[] selectionArgs = { String.valueOf(id) };
 
-		int deletedCount = db.delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
-		db.close();
+		int deletedCount = writableDb.delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
 		return deletedCount > 0;
 	}
 
 	public long addCwg(ContentValues values) {
-		SQLiteDatabase db = openHelper.getWritableDatabase();
 		/*
 		//TODO; prijmout rovnou .... treba i stahnout obrazek a tak ... ala ORM
 		ContentValues values = new ContentValues();
@@ -62,30 +72,38 @@ public class Cwg {
 		values.put(COLUMN_NOTE, text);
 		*/
 		
-		long id = db.insert(TABLE_NAME, null, values);
-		db.close();
+		long id = writableDb.insert(TABLE_NAME, null, values);
 		return id;
 	}
 	
 	public long updateCwg(int id, ContentValues values) {
-		SQLiteDatabase db = openHelper.getWritableDatabase();
 		
 		long count = 0;
 		if(getCwg(id).getCount() == 1){
-			count = db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
+			count = writableDb.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
 		}
-		db.close();
 		return count;
 	}
 
-	public void close() {
-		openHelper.close();
+	public void onClose() {
+		if(writableDb != null){
+			writableDb.close();	
+		}
+		
+		if(readableDb != null){
+			readableDb.close();	
+		}
+		
+		if(openHelper != null){
+			openHelper.close();	
+		}
+		
+		if(cursor != null){
+			cursor.close();	
+		}
+
 	}
 	
-	public void onDestroy()
-	{
-		openHelper.close();
-	}
 
 	static class DatabaseHelper extends SQLiteOpenHelper {
 

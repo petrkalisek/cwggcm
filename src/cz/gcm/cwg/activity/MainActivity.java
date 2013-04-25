@@ -50,6 +50,7 @@ public class MainActivity extends BaseActivity {
 	        	Intent intent = new Intent(this, SettingActivity.class);
 	        	Log.d("MainActivity::onOptionsItemSelected", "settying");
 	    		startActivity(intent);
+	    		finish();
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -60,6 +61,11 @@ public class MainActivity extends BaseActivity {
 		Intent intent = new Intent(this, SettingActivity.class);
     	Log.d("MainActivity::openSettingActivity", "settying");
 		startActivity(intent);
+	}
+	
+	
+	public void startActivityForResult(){
+		Log.d("MainActivity::startActivityForResult", "CLICK BACK");
 	}
 
 
