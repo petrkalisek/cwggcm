@@ -17,11 +17,13 @@ import cz.gcm.cwg.comm.BaseCwgApi;
 abstract class BaseActivity extends Activity {
 
 	private BaseCwgApi calledObject = null;
+	protected ProgressDialog progressDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -30,24 +32,31 @@ abstract class BaseActivity extends Activity {
 		return true;
 	}
 
+	protected void showProcessDialog(){
+		progressDialog = new ProgressDialog(this);
+		//Toast.makeText(getApplicationContext(), "onPreExecute", Toast.LENGTH_LONG).show();
+		progressDialog.setCancelable(true);
+		progressDialog.setMessage("Loading data, please wait...");
+		progressDialog.show();
+	}
+	
+	protected void hideProcessDialog(){
+		if (progressDialog != null && progressDialog.isShowing()) {
+			progressDialog.dismiss();
+        }
+	}
+	
+	
+	
 	protected class AsyncTaskActivity extends
 			AsyncTask<BaseCwgApi, String, JSONObject> {
-
-		ProgressDialog progressDialog = new ProgressDialog(BaseActivity.this);
 
 		protected void onCreate(){
 			Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_LONG).show();
 		}
 		
-		protected void onPreExecute() {
-			Toast.makeText(getApplicationContext(), "onPreExecute", Toast.LENGTH_LONG).show();
-			this.progressDialog.setCancelable(true);
-			this.progressDialog.setMessage("Loading data, please wait...");
-			this.progressDialog.show();
-		}
-
 		@Override
-		protected JSONObject doInBackground(BaseCwgApi... object) {
+		protected JSONObject doInBackground(BaseCwgApi... object){
 			
 			JSONObject jsonResult = new JSONObject();
 			
@@ -62,7 +71,6 @@ abstract class BaseActivity extends Activity {
 				//return calledObject.getResult();	
 			}catch( Exception e){
 				
-				
 			}
 			
 			Log.d("doInBackground:return", jsonResult.toString());
@@ -72,9 +80,6 @@ abstract class BaseActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(JSONObject result) {
-			if (this.progressDialog.isShowing()) {
-				this.progressDialog.dismiss();
-	        }
 			Toast.makeText(getApplicationContext(), "onPostExecute", Toast.LENGTH_LONG).show();
 		}
 

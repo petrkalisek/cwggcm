@@ -1,7 +1,5 @@
 package cz.gcm.cwg.layouts;
 
-import org.json.JSONException;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;

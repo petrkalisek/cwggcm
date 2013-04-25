@@ -37,27 +37,37 @@ public class Cwg {
 		context = ctx;
 	}
 	
-	public void onStart(){
-		Log.d("Cwg::onStart", "onStart");
-	}
-
 	public Cursor getAllCwg() {
 		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
+		//close();
 		return cursor;
 	}
 
 	public Cursor getCwg(long id) {
 		Log.d("Cwg::getCwg", "id:"+id);
-		String[] selectionArgs = { String.valueOf(id) };
-		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
-				null, null, ORDER_BY);
+		
+		Cursor cursor = null;
+		
+		try{
+			String[] selectionArgs = { String.valueOf(id) };
+			cursor = getReadableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
+					null, null, ORDER_BY);	
+		}catch(Exception e){
+			Log.w("getCwg EXCEPTION", e.getMessage());
+			return null;
+		}
+		
+		Log.i("getCwg::return", ""+id);
+		
+		close();
 		return cursor;
 	}
 
 	public boolean deleteCwg(long id) {
 		String[] selectionArgs = { String.valueOf(id) };
-
 		int deletedCount = getWritableDb().delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
+		close();
+		
 		return deletedCount > 0;
 	}
 
@@ -70,54 +80,50 @@ public class Cwg {
 		*/
 		
 		long id = getWritableDb().insert(TABLE_NAME, null, values);
+		close();
 		return id;
 	}
 	
 	public long updateCwg(int id, ContentValues values) {
 		
 		long count = 0;
-		if(getCwg(id).getCount() == 1){
+		if(getCwg(id) != null ){
 			count = getWritableDb().update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
 		}
+		close();
 		return count;
 	}
 
-	public void onClose() {
+	public void close() {
 		
-		if(writableDb != null){
+		if(writableDb != null && writableDb.isOpen()){
 			writableDb.close();	
 		}
 		
-		if(readableDb != null){
+		if(readableDb != null && readableDb.isOpen()){
 			readableDb.close();	
 		}
-		/*
-		if(openHelper != null){
-			openHelper.close();	
-		}*/
-		
 	}
 	
 	private SQLiteDatabase getReadableDb(){
-		
 		if(openHelper == null){
 			openHelper = CwgDatabaseHelper.getInstance(context);
 		}
 				
-		if( readableDb == null){
-			readableDb = openHelper.getReadableDatabase();
-		}
+		close();
+		readableDb = openHelper.getReadableDatabase();
+		
 		return readableDb;
 	}
 	
 	private SQLiteDatabase getWritableDb(){
+		
 		if(openHelper == null){
 			openHelper = CwgDatabaseHelper.getInstance(context);
 		}
 		
-		if( writableDb == null){
-			writableDb = openHelper.getReadableDatabase();
-		}
+		close();
+		writableDb = openHelper.getReadableDatabase();
 		return writableDb;
 	}
 }

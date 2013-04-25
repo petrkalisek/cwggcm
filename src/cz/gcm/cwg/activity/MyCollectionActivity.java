@@ -29,7 +29,6 @@ public class MyCollectionActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_collection);
 
@@ -57,7 +56,7 @@ public class MyCollectionActivity extends BaseActivity {
 
 	public void onBackPressed() {
 		super.onBackPressed();
-		cwg.onClose();
+		cwg.close();
 		Log.d("MyCollectionActivity::onBackPressed", "CLICK BACK");
 	};
 
@@ -66,6 +65,9 @@ public class MyCollectionActivity extends BaseActivity {
 	}
 
 	private void loadData(Boolean force) {
+		
+		showProcessDialog();
+				
 		SharedPreferences prefsRead = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 
@@ -73,6 +75,7 @@ public class MyCollectionActivity extends BaseActivity {
 		Log.d("useCacheData", useCacheData.toString());
 
 		if (!useCacheData || force) {
+			
 			try {
 				MyCollection myCollection = new MyCollection();
 				AsyncTaskActivity Async = new AsyncTaskActivity();
@@ -107,48 +110,48 @@ public class MyCollectionActivity extends BaseActivity {
 							values.put(Cwg.COLUMN_ID, t.optString("id"));
 							values.put(Cwg.COLUMN_NAME, t.optString("name"));
 							values.put(Cwg.COLUMN_CWGNO, t.optString("cwgno"));
-							values.put(Cwg.COLUMN_VERSION,	t.optInt("version"));
+							values.put(Cwg.COLUMN_VERSION,	t.optString("version"));
 							values.put(Cwg.COLUMN_IMAGE, t.optString("image"));
 							
-							cwg.deleteCwg(t.getInt("id"));
-							
+							Log.i("getCwg","" + t.getInt("id"));
 							Cursor c = cwg.getCwg(t.getInt("id"));
-							int cnt = c.getCount();
-							Log.i("MyCollectionActivity",
-									"getCwg:" + String.valueOf(cnt));
-							
-							
 							long id = 0;
-							if (cnt > 0) {
-								id = cwg.updateCwg(t.getInt("id"), values);
-								Log.i("MyCollectionActivity",
-										"update database:" + String.valueOf(id));
-							} else {
+							
+							if( c == null ){
 								id = cwg.addCwg(values);
 								Log.i("MyCollectionActivity", "add database:"
 										+ String.valueOf(id));
+							}else{
+								id = cwg.updateCwg(t.getInt("id"), values);
+								Log.i("MyCollectionActivity",
+										"update database:" + String.valueOf(id));
 							}
 							
+							Log.i("after getCwg","" + t.getInt("id"));
 						}
 					}
 
 				} catch (Exception e) {
-					Log.w("MyCollectionActivity", "Async.execute exception:"
+					Log.w("MyCollectionActivity", "Async.execute exception 1:"
 							+ e.toString());
 				}
 			} catch (Exception e) {
-
+				Log.w("MyCollectionActivity", "Async.execute exception 2:"
+						+ e.toString());
 			}
 		}
 		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor databaseResult = cwg.getAllCwg();
-		startManagingCursor(databaseResult);
 		listenersList.setAdapter(new SimpleListItem(this, databaseResult));
-	}
+		
+		hideProcessDialog();
 
+	}
+	/*
 	@Override
 	protected void onStop() {
+		
 		cwg.onClose();
 		Log.i("MyCollectionActivity", "onStop");
 		super.onStop();
@@ -160,6 +163,6 @@ public class MyCollectionActivity extends BaseActivity {
 		cwg.onClose();
 		Log.i("MyCollectionActivity", "onPause");
 		super.onPause();
-	}
+	}*/
 
 }
