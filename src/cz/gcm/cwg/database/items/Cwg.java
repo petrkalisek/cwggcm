@@ -7,10 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import cz.gcm.cwg.constants.Database;
+import cz.gcm.cwg.database.CwgDatabaseHelper;
 
 public class Cwg {
 
-	protected static final String TABLE_NAME = "cwg";
+	public static final String TABLE_NAME = "cwg";
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_CWGNO = "cwgno";
 	public static final String COLUMN_VERSION = "version";
@@ -30,37 +31,33 @@ public class Cwg {
 	private SQLiteOpenHelper openHelper = null;
 	private SQLiteDatabase writableDb = null;
 	private SQLiteDatabase readableDb = null;
-	private Cursor cursor = null;
+	private Context context = null;
 
 	public Cwg(Context ctx) {
-		openHelper = new DatabaseHelper(ctx);
+		context = ctx;
 	}
 	
 	public void onStart(){
 		Log.d("Cwg::onStart", "onStart");
-		writableDb = openHelper.getWritableDatabase();
-		readableDb = openHelper.getReadableDatabase();
 	}
 
 	public Cursor getAllCwg() {
-		cursor = readableDb.query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
+		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
 		return cursor;
 	}
 
 	public Cursor getCwg(long id) {
 		Log.d("Cwg::getCwg", "id:"+id);
 		String[] selectionArgs = { String.valueOf(id) };
-		cursor = readableDb.query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
+		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
 				null, null, ORDER_BY);
-		
-		Log.d("Cwg::db.getPath()", readableDb.getPath());
 		return cursor;
 	}
 
 	public boolean deleteCwg(long id) {
 		String[] selectionArgs = { String.valueOf(id) };
 
-		int deletedCount = writableDb.delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
+		int deletedCount = getWritableDb().delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
 		return deletedCount > 0;
 	}
 
@@ -72,7 +69,7 @@ public class Cwg {
 		values.put(COLUMN_NOTE, text);
 		*/
 		
-		long id = writableDb.insert(TABLE_NAME, null, values);
+		long id = getWritableDb().insert(TABLE_NAME, null, values);
 		return id;
 	}
 	
@@ -80,12 +77,13 @@ public class Cwg {
 		
 		long count = 0;
 		if(getCwg(id).getCount() == 1){
-			count = writableDb.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
+			count = getWritableDb().update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
 		}
 		return count;
 	}
 
 	public void onClose() {
+		
 		if(writableDb != null){
 			writableDb.close();	
 		}
@@ -93,37 +91,33 @@ public class Cwg {
 		if(readableDb != null){
 			readableDb.close();	
 		}
-		
+		/*
 		if(openHelper != null){
 			openHelper.close();	
-		}
+		}*/
 		
-		if(cursor != null){
-			cursor.close();	
-		}
-
 	}
 	
-
-	static class DatabaseHelper extends SQLiteOpenHelper {
-
-		DatabaseHelper(Context context) {
-			super(context, Database.DATABASE_NAME, null,
-					Database.DATABASE_VERSION);
+	private SQLiteDatabase getReadableDb(){
+		
+		if(openHelper == null){
+			openHelper = CwgDatabaseHelper.getInstance(context);
 		}
-
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(CREATE_TABLE_SQL);
+				
+		if( readableDb == null){
+			readableDb = openHelper.getReadableDatabase();
 		}
-
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			// TODO: upgrade
-			// db.execSQL("DROP TABLE IF EXISTS notes");
-			// onCreate(db);
-		}
-
+		return readableDb;
 	}
-
+	
+	private SQLiteDatabase getWritableDb(){
+		if(openHelper == null){
+			openHelper = CwgDatabaseHelper.getInstance(context);
+		}
+		
+		if( writableDb == null){
+			writableDb = openHelper.getReadableDatabase();
+		}
+		return writableDb;
+	}
 }

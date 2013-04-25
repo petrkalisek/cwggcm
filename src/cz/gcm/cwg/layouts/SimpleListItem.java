@@ -48,10 +48,12 @@ public class SimpleListItem implements ListAdapter, OnClickListener   {
 			TextView txtTitle = (TextView) row.findViewById(R.id.title);
 			TextView txtDesc = (TextView) row.findViewById(R.id.desc);
 			TextView id = (TextView) row.findViewById(R.id.viewId);
+			TextView version = (TextView) row.findViewById(R.id.version);
 			
 			txtTitle.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_NAME)));
 			txtDesc.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_CWGNO)));
 			id.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID)));
+			version.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_VERSION)));
 		}
 		return row;
 	}

@@ -31,7 +31,7 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="match_parent"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="TextView" />
 
@@ -51,5 +51,14 @@
             android:visibility="invisible" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="66dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@+id/linearLayout1"
+        android:layout_alignParentRight="true"
+        android:text="version"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

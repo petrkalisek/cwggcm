@@ -24,7 +24,8 @@ import cz.gcm.cwg.layouts.SimpleListItem;
 public class MyCollectionActivity extends BaseActivity {
 
 	private ProgressDialog progressDialog;
-	private Cwg cwg;
+	private Cwg cwg = null;
+	private Cursor databaseResult = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,8 @@ public class MyCollectionActivity extends BaseActivity {
 
 	@Override
 	protected void onStart() {
-		cwg = new Cwg(this);
 		super.onStart();
-		cwg.onClose();
-		cwg.onStart();
+		cwg = new Cwg(this);
 		loadData(false);
 	}
 
@@ -58,6 +57,8 @@ public class MyCollectionActivity extends BaseActivity {
 
 	public void onBackPressed() {
 		super.onBackPressed();
+		cwg.onClose();
+		Log.d("MyCollectionActivity::onBackPressed", "CLICK BACK");
 	};
 
 	public void startActivityForResult() {
@@ -106,12 +107,19 @@ public class MyCollectionActivity extends BaseActivity {
 							values.put(Cwg.COLUMN_ID, t.optString("id"));
 							values.put(Cwg.COLUMN_NAME, t.optString("name"));
 							values.put(Cwg.COLUMN_CWGNO, t.optString("cwgno"));
-							values.put(Cwg.COLUMN_VERSION,
-									t.optString("version"));
+							values.put(Cwg.COLUMN_VERSION,	t.optInt("version"));
 							values.put(Cwg.COLUMN_IMAGE, t.optString("image"));
-
+							
+							cwg.deleteCwg(t.getInt("id"));
+							
+							Cursor c = cwg.getCwg(t.getInt("id"));
+							int cnt = c.getCount();
+							Log.i("MyCollectionActivity",
+									"getCwg:" + String.valueOf(cnt));
+							
+							
 							long id = 0;
-							if (cwg.getCwg(t.getInt("id")).getCount() > 0) {
+							if (cnt > 0) {
 								id = cwg.updateCwg(t.getInt("id"), values);
 								Log.i("MyCollectionActivity",
 										"update database:" + String.valueOf(id));
@@ -120,6 +128,7 @@ public class MyCollectionActivity extends BaseActivity {
 								Log.i("MyCollectionActivity", "add database:"
 										+ String.valueOf(id));
 							}
+							
 						}
 					}
 
@@ -131,11 +140,11 @@ public class MyCollectionActivity extends BaseActivity {
 
 			}
 		}
-
+		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
-		Cursor c = cwg.getAllCwg();
-		listenersList.setAdapter(new SimpleListItem(this, c));
-
+		Cursor databaseResult = cwg.getAllCwg();
+		startManagingCursor(databaseResult);
+		listenersList.setAdapter(new SimpleListItem(this, databaseResult));
 	}
 
 	@Override

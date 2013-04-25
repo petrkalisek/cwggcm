@@ -26,7 +26,7 @@ public class MyCollection extends CwgApi {
 			Log.i(LOG_TAG, params.toString());
 
 			jsonCwgInfo = callUrl(Comm.API_URL_MY_COLLECTION, params);
-			Log.i(LOG_TAG, "getResult: jsonCwgInfo:"+jsonCwgInfo.toString());
+			//Log.i(LOG_TAG, "getResult: jsonCwgInfo:"+jsonCwgInfo.toString());
 			return jsonCwgInfo;
 		} catch (LoginException e) {
 			Log.w(LOG_TAG, e.getMessage());
@@ -34,7 +34,7 @@ public class MyCollection extends CwgApi {
 			Log.w(LOG_TAG, e.getMessage());
 		}
 		
-		Log.w(LOG_TAG, "getResult:return "+jsonCwgInfo.toString());
+		//Log.w(LOG_TAG, "getResult:return "+jsonCwgInfo.toString());
 		
 		return jsonCwgInfo;
 	}
