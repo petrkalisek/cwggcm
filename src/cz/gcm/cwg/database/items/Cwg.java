@@ -40,7 +40,7 @@ public class Cwg {
 	public Cursor getAllCwg() {
 		close();
 		
-		Log.d("Cwg::getAllCwg", "id: no ;)");
+		//Log.d("Cwg::getAllCwg", "id: no ;)");
 		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
 		
 		dumpCursor(cursor);
@@ -49,7 +49,7 @@ public class Cwg {
 	}
 
 	public Cursor getCwg(long id) {
-		Log.d("Cwg::getCwg", "id:"+id);
+		//Log.d("Cwg::getCwg", "id:"+id);
 		Cursor cursor = null;
 		close();
 		
@@ -65,14 +65,14 @@ public class Cwg {
 		}
 		
 		
-		Log.i("getCwg::return", ""+id);
+		//Log.i("getCwg::return", ""+id);
 		return cursor;
 	}
 
 	public boolean deleteCwg(long id) {
 		close();
 		
-		Log.d("Cwg::deleteCwg", "id:"+id);
+		//Log.d("Cwg::deleteCwg", "id:"+id);
 		String[] selectionArgs = { String.valueOf(id) };
 		int deletedCount = getWritableDb().delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
 		
@@ -80,7 +80,7 @@ public class Cwg {
 	}
 
 	public long addCwg(ContentValues values) {
-		Log.d("Cwg::addCwg", "values:"+values.toString());
+		//Log.d("Cwg::addCwg", "values:"+values.toString());
 		close();
 		
 		/*
@@ -96,7 +96,7 @@ public class Cwg {
 	
 	public long updateCwg(int id, ContentValues values) {
 		close();
-		Log.d("Cwg::addCwg", "values:"+values.toString());
+		//Log.d("Cwg::addCwg", "values:"+values.toString());
 		long count = 0;
 		if(getCwg(id) != null ){
 			count = getWritableDb().update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
