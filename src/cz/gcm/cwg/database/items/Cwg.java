@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
 import android.util.Log;
-import cz.gcm.cwg.constants.Database;
 import cz.gcm.cwg.database.CwgDatabaseHelper;
 
 public class Cwg {
@@ -38,31 +38,40 @@ public class Cwg {
 	}
 	
 	public Cursor getAllCwg() {
+		close();
+		
 		Log.d("Cwg::getAllCwg", "id: no ;)");
 		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
+		
+		dumpCursor(cursor);
+		
 		return cursor;
 	}
 
 	public Cursor getCwg(long id) {
 		Log.d("Cwg::getCwg", "id:"+id);
 		Cursor cursor = null;
+		close();
 		
 		try{
 			String[] selectionArgs = { String.valueOf(id) };
 			cursor = getReadableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
 					null, null, ORDER_BY);
+			dumpCursor(cursor);
 			cursor.close();
 		}catch(Exception e){
 			Log.w("getCwg EXCEPTION", e.getMessage());
 			return null;
 		}
 		
-		close();
+		
 		Log.i("getCwg::return", ""+id);
 		return cursor;
 	}
 
 	public boolean deleteCwg(long id) {
+		close();
+		
 		Log.d("Cwg::deleteCwg", "id:"+id);
 		String[] selectionArgs = { String.valueOf(id) };
 		int deletedCount = getWritableDb().delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
@@ -72,6 +81,8 @@ public class Cwg {
 
 	public long addCwg(ContentValues values) {
 		Log.d("Cwg::addCwg", "values:"+values.toString());
+		close();
+		
 		/*
 		//TODO; prijmout rovnou .... treba i stahnout obrazek a tak ... ala ORM
 		ContentValues values = new ContentValues();
@@ -84,7 +95,8 @@ public class Cwg {
 	}
 	
 	public long updateCwg(int id, ContentValues values) {
-		Log.d("Cwg::updateCwg", "values:"+values.toString());
+		close();
+		Log.d("Cwg::addCwg", "values:"+values.toString());
 		long count = 0;
 		if(getCwg(id) != null ){
 			count = getWritableDb().update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
@@ -123,5 +135,17 @@ public class Cwg {
 		close();
 		writableDb = openHelper.getReadableDatabase();
 		return writableDb;
+	}
+	
+	
+	private void dumpCursor(Cursor c){
+		Log.d("Cwg::dumpCursor", c.toString());
+		
+		c.moveToFirst();
+		while (c.moveToNext()) {
+	        Bundle data = c.getExtras();
+	        Log.d("Cwg::dumpCursor", data.toString());
+	    }
+		
 	}
 }

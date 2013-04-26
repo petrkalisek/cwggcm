@@ -12,13 +12,13 @@
             android:summary="@string/pref_loginUserSummary"
             android:title="@string/pref_loginUserTitle"
             android:hint="@string/pref_loginUserTitle"
-            android:defaultValue="" />
+            android:defaultValue="PetrAJana" />
         <EditTextPreference
             android:key="pref_password"
             android:summary="@string/pref_loginPasswordSummary"
             android:title="@string/pref_loginPasswordTitle"
             android:hint="@string/pref_loginPasswordTitle"
-            android:defaultValue="" />
+            android:defaultValue="bondicek" />
         
 		<!-- TODO: DEBUG -->        
         <EditTextPreference
@@ -40,7 +40,7 @@
             android:key="pref_useCacheData"
             android:summary="@string/pref_useCacheDataSummary"
             android:title="@string/pref_useCacheDataTitle"
-            android:defaultValue="false" />
+            android:defaultValue="true" />
     </PreferenceCategory>
     <!-- 
     <PreferenceCategory 

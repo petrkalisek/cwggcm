@@ -146,7 +146,7 @@ public class MyCollectionActivity extends BaseActivity {
 		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor databaseResult = cwg.getAllCwg();
-		//listenersList.setAdapter(new SimpleListItem(this, databaseResult));
+		listenersList.setAdapter(new SimpleListItem(this, databaseResult));
 		
 		//hideProcessDialog();
 

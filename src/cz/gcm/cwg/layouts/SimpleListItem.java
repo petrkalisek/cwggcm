@@ -43,13 +43,10 @@ public class SimpleListItem implements ListAdapter, OnClickListener   {
 		}
 		
 		if( data.moveToPosition(position) ){
-			
 			TextView txtTitle = (TextView) row.findViewById(R.id.title);
 			TextView txtDesc = (TextView) row.findViewById(R.id.desc);
 			TextView id = (TextView) row.findViewById(R.id.viewId);
 			TextView version = (TextView) row.findViewById(R.id.version);
-			
-			Log.d("SimpleListItem::getView",""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_NAME)));
 			
 			txtTitle.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_NAME)));
 			txtDesc.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_CWGNO)));
