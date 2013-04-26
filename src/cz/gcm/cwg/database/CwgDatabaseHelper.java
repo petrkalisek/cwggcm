@@ -7,7 +7,11 @@ import cz.gcm.cwg.constants.Database;
 import cz.gcm.cwg.database.items.Cwg;
 
 public class CwgDatabaseHelper extends SQLiteOpenHelper {
-
+	
+	private static final String DATABASE_NAME = Database.DATABASE_NAME;
+    private static final String DATABASE_TABLE = Cwg.TABLE_NAME;
+    private static final int DATABASE_VERSION = 1;
+    
 	private static CwgDatabaseHelper mInstance = null;
 	
 	CwgDatabaseHelper(Context context) {

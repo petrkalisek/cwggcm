@@ -38,40 +38,40 @@ public class Cwg {
 	}
 	
 	public Cursor getAllCwg() {
+		Log.d("Cwg::getAllCwg", "id: no ;)");
 		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
-		//close();
 		return cursor;
 	}
 
 	public Cursor getCwg(long id) {
 		Log.d("Cwg::getCwg", "id:"+id);
-		
 		Cursor cursor = null;
 		
 		try{
 			String[] selectionArgs = { String.valueOf(id) };
 			cursor = getReadableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
-					null, null, ORDER_BY);	
+					null, null, ORDER_BY);
+			cursor.close();
 		}catch(Exception e){
 			Log.w("getCwg EXCEPTION", e.getMessage());
 			return null;
 		}
 		
-		Log.i("getCwg::return", ""+id);
-		
 		close();
+		Log.i("getCwg::return", ""+id);
 		return cursor;
 	}
 
 	public boolean deleteCwg(long id) {
+		Log.d("Cwg::deleteCwg", "id:"+id);
 		String[] selectionArgs = { String.valueOf(id) };
 		int deletedCount = getWritableDb().delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
-		close();
 		
 		return deletedCount > 0;
 	}
 
 	public long addCwg(ContentValues values) {
+		Log.d("Cwg::addCwg", "values:"+values.toString());
 		/*
 		//TODO; prijmout rovnou .... treba i stahnout obrazek a tak ... ala ORM
 		ContentValues values = new ContentValues();
@@ -80,17 +80,15 @@ public class Cwg {
 		*/
 		
 		long id = getWritableDb().insert(TABLE_NAME, null, values);
-		close();
 		return id;
 	}
 	
 	public long updateCwg(int id, ContentValues values) {
-		
+		Log.d("Cwg::updateCwg", "values:"+values.toString());
 		long count = 0;
 		if(getCwg(id) != null ){
 			count = getWritableDb().update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
 		}
-		close();
 		return count;
 	}
 

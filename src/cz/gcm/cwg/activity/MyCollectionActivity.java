@@ -66,7 +66,7 @@ public class MyCollectionActivity extends BaseActivity {
 
 	private void loadData(Boolean force) {
 		
-		showProcessDialog();
+		//showProcessDialog();
 				
 		SharedPreferences prefsRead = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
@@ -90,7 +90,8 @@ public class MyCollectionActivity extends BaseActivity {
 					if (myCollectionResult.optJSONArray("Export").length() > 0) {
 						JSONArray exportArray = myCollectionResult
 								.getJSONArray("Export");
-
+						Cursor c = null;
+						
 						for (int i = 0; i < exportArray.length(); i++) {
 							JSONObject t = (JSONObject) exportArray.get(i);
 							JSONArray collection = t.optJSONArray("collection");
@@ -114,10 +115,12 @@ public class MyCollectionActivity extends BaseActivity {
 							values.put(Cwg.COLUMN_IMAGE, t.optString("image"));
 							
 							Log.i("getCwg","" + t.getInt("id"));
-							Cursor c = cwg.getCwg(t.getInt("id"));
+							c = cwg.getCwg(t.getInt("id"));
 							long id = 0;
 							
-							if( c == null ){
+							Log.d("MyCollectionActivity::cwg.getCwg",t.getInt("id")+"" + c.toString());
+							
+							if( c == null || c.getCount() == 0){
 								id = cwg.addCwg(values);
 								Log.i("MyCollectionActivity", "add database:"
 										+ String.valueOf(id));
@@ -143,9 +146,9 @@ public class MyCollectionActivity extends BaseActivity {
 		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor databaseResult = cwg.getAllCwg();
-		listenersList.setAdapter(new SimpleListItem(this, databaseResult));
+		//listenersList.setAdapter(new SimpleListItem(this, databaseResult));
 		
-		hideProcessDialog();
+		//hideProcessDialog();
 
 	}
 	/*
