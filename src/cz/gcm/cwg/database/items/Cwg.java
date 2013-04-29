@@ -30,27 +30,32 @@ public class Cwg {
 
 	private SQLiteOpenHelper openHelper = null;
 	private SQLiteDatabase writableDb = null;
-	private SQLiteDatabase readableDb = null;
 	private Context context = null;
 
 	public Cwg(Context ctx) {
 		context = ctx;
+		openHelper = CwgDatabaseHelper.getInstance(context);
 	}
 	
 	public Cursor getAllCwg() {
-		close();
-		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
+		Cursor mCount= getWritableDb().rawQuery("select count(*) from "+TABLE_NAME, null);
+		mCount.moveToFirst();
+		int count= mCount.getInt(0);
+		Log.i("getAllCwg::count", "count:"+count);
+		mCount.close();
+		
+		Cursor cursor = getWritableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
+		dumpCursor(cursor);
 		return cursor;
 	}
 
 	public Cursor getCwg(long id) {
 		//Log.d("Cwg::getCwg", "id:"+id);
 		Cursor cursor = null;
-		close();
 		
 		try{
 			String[] selectionArgs = { String.valueOf(id) };
-			cursor = getReadableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
+			cursor = getWritableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
 					null, null, ORDER_BY);
 			cursor.close();
 		}catch(Exception e){
@@ -61,30 +66,31 @@ public class Cwg {
 	}
 
 	public boolean deleteCwg(long id) {
-		close();
-
 		String[] selectionArgs = { String.valueOf(id) };
 		int deletedCount = getWritableDb().delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
 		return deletedCount > 0;
 	}
 
 	public long addCwg(ContentValues values) {
-		//Log.d("Cwg::addCwg", "values:"+values.toString());
-		close();
+		Log.d("Cwg::addCwg", "values:"+values.toString());
+		Log.d("Cwg::addCwg", "getCwg("+values.getAsLong(COLUMN_ID)+"):"+getCwg(values.getAsLong(COLUMN_ID)).toString());
+
+		long id = 0;
 		
-		/*
-		//TODO; prijmout rovnou .... treba i stahnout obrazek a tak ... ala ORM
-		ContentValues values = new ContentValues();
-		values.put(COLUMN_TITLE, "Title");
-		values.put(COLUMN_NOTE, text);
-		*/
+		if(getCwg(values.getAsLong(COLUMN_ID)).getCount() > 0){
+			Log.d("Cwg::updateCwg", "");
+			id = updateCwg(values.getAsLong(COLUMN_ID), values);
+		}else{
+			Log.d("Cwg::insert", "");
+			id = getWritableDb().insert(TABLE_NAME, null, values);
+		}
+		getWritableDb().close();
 		
-		long id = getWritableDb().insert(TABLE_NAME, null, values);
 		return id;
 	}
 	
-	public long updateCwg(int id, ContentValues values) {
-		close();
+	public long updateCwg(long id, ContentValues values) {
+		
 		long count = 0;
 		if(getCwg(id) != null ){
 			count = getWritableDb().update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	
@@ -92,36 +98,16 @@ public class Cwg {
 		return count;
 	}
 
-	public void close() {
-		
-		if(writableDb != null && writableDb.isOpen()){
-			writableDb.close();	
-		}
-		
-		if(readableDb != null && readableDb.isOpen()){
-			readableDb.close();	
-		}
-	}
 	
 	private SQLiteDatabase getReadableDb(){
-		if(openHelper == null){
-			openHelper = CwgDatabaseHelper.getInstance(context);
-		}
-				
-		close();
-		readableDb = openHelper.getReadableDatabase();
-		
-		return readableDb;
+		return getWritableDb();
 	}
 	
 	private SQLiteDatabase getWritableDb(){
 		
-		if(openHelper == null){
-			openHelper = CwgDatabaseHelper.getInstance(context);
+		if(writableDb == null){
+			writableDb = openHelper.getWritableDatabase();	
 		}
-		
-		close();
-		writableDb = openHelper.getReadableDatabase();
 		return writableDb;
 	}
 	

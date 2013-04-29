@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,11 +33,13 @@ abstract class BaseActivity extends Activity {
 		return true;
 	}
 
-	protected void showProcessDialog(){
-		progressDialog = new ProgressDialog(this);
-		//Toast.makeText(getApplicationContext(), "onPreExecute", Toast.LENGTH_LONG).show();
-		progressDialog.setCancelable(true);
-		progressDialog.setMessage("Loading data, please wait...");
+	
+	protected void showProcessDialog(Context context){
+		if(progressDialog == null){
+			progressDialog = new ProgressDialog(context);	
+			progressDialog.setCancelable(true);
+			progressDialog.setMessage("Loading data, please wait ...");
+		}
 		progressDialog.show();
 	}
 	
@@ -47,23 +50,33 @@ abstract class BaseActivity extends Activity {
 	}
 	
 	
+	/*
+	
 	
 	final class AsyncTaskActivity extends
-			AsyncTask<BaseCwgApi, String, JSONObject> {
-	   
-		protected void onCreate(){
-			Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_LONG).show();
-		}
+			AsyncTask<Context, String, JSONObject> {
+		
+		private BaseCwgApi action;
+		private Context context;
+		
+		public AsyncTaskActivity(BaseCwgApi action)
+        {
+            this.action = action;
+        }
+		
 		
 		@Override
-		protected JSONObject doInBackground(BaseCwgApi... object){
+		protected JSONObject doInBackground(Context... context){
+			//this.progress.show();
+			
+			this.context = context[0];
 			
 			JSONObject jsonResult = new JSONObject();
 			
 			try{
-				calledObject = object[0];
+				calledObject = this.action;
 				//TODO: hardcore for shared prefs 
-				calledObject.setContext(getApplicationContext());
+				calledObject.setContext(this.context);
 				Log.d("TAG1", calledObject.toString());
 				jsonResult = calledObject.getResult();	
 				Log.d("TAG2", jsonResult.toString());
@@ -85,6 +98,10 @@ abstract class BaseActivity extends Activity {
 			Toast.makeText(getApplicationContext(), "onProgressUpdate", Toast.LENGTH_LONG).show();
 		}
 		
+		
+		
 	}
+	*/
+	
 
 }

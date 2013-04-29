@@ -13,7 +13,9 @@ import android.view.View;
 
 import com.example.cwggmc.R;
 
+import cz.gcm.cwg.comm.ActivityComm;
 import cz.gcm.cwg.comm.CwgInfo;
+import cz.gcm.cwg.comm.MyCollection;
 
 
 public class MainActivity extends BaseActivity {
@@ -72,14 +74,14 @@ public class MainActivity extends BaseActivity {
 
 	public void clickDefault(View view){
 		
-		ProgressDialog progressDialog = new ProgressDialog(this);
-		progressDialog.setMessage("Loading, please wait");
-		progressDialog.show();
-		
 		try{
-			CwgInfo cwgInfo = new CwgInfo("petrajana");
-			AsyncTaskActivity Async = new AsyncTaskActivity();
-			JSONObject cwgInfoResult = Async.execute(cwgInfo).get();
+			ActivityComm activityCommInstance = ActivityComm.getInstance(getApplicationContext());
+			JSONObject cwgInfoResult = activityCommInstance.callObject(new CwgInfo("petrajana"));
+			/*
+			CwgInfo cwgInfo = ;
+			AsyncTaskActivity Async = new AsyncTaskActivity(cwgInfo);
+			JSONObject cwgInfoResult = Async.execute(this).get();
+			*/
 			
 			
 			Log.w("MainActivity::clickDefault", cwgInfoResult.toString());

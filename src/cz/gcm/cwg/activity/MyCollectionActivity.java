@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.cwggmc.R;
 
+import cz.gcm.cwg.comm.ActivityComm;
 import cz.gcm.cwg.comm.MyCollection;
 import cz.gcm.cwg.database.items.Cwg;
 import cz.gcm.cwg.layouts.SimpleListItem;
@@ -70,7 +71,6 @@ public class MyCollectionActivity extends BaseActivity {
 
 	public void onBackPressed() {
 		super.onBackPressed();
-		cwg.close();
 		Log.d("MyCollectionActivity::onBackPressed", "CLICK BACK");
 	};
 
@@ -87,14 +87,24 @@ public class MyCollectionActivity extends BaseActivity {
 		Log.d("useCacheData", useCacheData.toString());
 		Log.d("dataLoaded", dataLoaded.toString());
 
+		//showProcessDialog(this);
+
 		if ( (!useCacheData || force) && !dataLoaded) {
 			
 			try {
-				MyCollection myCollection = new MyCollection();
-				AsyncTaskActivity Async = new AsyncTaskActivity();
+				Log.d("loadData", this.getApplicationContext().toString());
+				ActivityComm activityCommInstance = ActivityComm.getInstance(this);
+				
+				JSONObject myCollectionResult = activityCommInstance.callObject(new MyCollection());
+				Log.w("MyCollectionActivity", "loadData::MyCollection"
+						+ myCollectionResult.toString());
+						
+				
+				/*
+				AsyncTaskActivity Async = new AsyncTaskActivity( );
 
 				try {
-					JSONObject myCollectionResult = Async.execute(myCollection)
+					JSONObject myCollectionResult = Async.execute(this)
 							.get();
 
 					//Log.d("MyCollectionActivity::jsonResult",
@@ -127,30 +137,16 @@ public class MyCollectionActivity extends BaseActivity {
 							values.put(Cwg.COLUMN_VERSION,	t.optString("version"));
 							values.put(Cwg.COLUMN_IMAGE, t.optString("image"));
 							
-							Log.i("getCwg","" + t.getInt("id"));
-							c = cwg.getCwg(t.getInt("id"));
-							long id = 0;
+							long id = cwg.addCwg(values);
 							
-							Log.d("MyCollectionActivity::cwg.getCwg",t.getInt("id")+"" + c.toString());
-							
-							if( c == null || c.getCount() == 0){
-								id = cwg.addCwg(values);
-								Log.i("MyCollectionActivity", "add database:"
-										+ String.valueOf(id));
-							}else{
-								id = cwg.updateCwg(t.getInt("id"), values);
-								Log.i("MyCollectionActivity",
-										"update database:" + String.valueOf(id));
-							}
-							
-							Log.i("after getCwg","" + t.getInt("id"));
+							Log.i("after getCwg","" + t.getInt("id")+ " ins id:"+id);
 						}
 					}
 
 				} catch (Exception e) {
 					Log.w("MyCollectionActivity", "Async.execute exception 1:"
 							+ e.toString());
-				}
+				}*/
 			} catch (Exception e) {
 				Log.w("MyCollectionActivity", "Async.execute exception 2:"
 						+ e.toString());
@@ -158,9 +154,11 @@ public class MyCollectionActivity extends BaseActivity {
 		}
 		dataLoaded = true;
 		
+		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor databaseResult = cwg.getAllCwg();
 		listenersList.setAdapter(new SimpleListItem(this, databaseResult));
+		Log.i("loadData::cursor", databaseResult.toString()+" "+databaseResult.getCount());
 		
 		//hideProcessDialog();
 
