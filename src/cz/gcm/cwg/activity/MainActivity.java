@@ -2,6 +2,7 @@ package cz.gcm.cwg.activity;
 
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,6 +72,9 @@ public class MainActivity extends BaseActivity {
 
 	public void clickDefault(View view){
 		
+		ProgressDialog progressDialog = new ProgressDialog(this);
+		progressDialog.setMessage("Loading, please wait");
+		progressDialog.show();
 		
 		try{
 			CwgInfo cwgInfo = new CwgInfo("petrajana");

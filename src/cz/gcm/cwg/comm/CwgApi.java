@@ -21,7 +21,7 @@ import cz.gcm.cwg.exceptions.data.DataFailed;
 import cz.gcm.cwg.exceptions.login.InvalidUsernameOrPassword;
 import cz.gcm.cwg.exceptions.login.YouMustFirstLogIn;
 
-public class CwgApi extends BaseCwgApi {
+public class CwgApi extends BaseCwgApi{
 
 	private static final String LOG_TAG = CwgApi.class.getName();
 	private Boolean disableSession = false;
@@ -65,8 +65,8 @@ public class CwgApi extends BaseCwgApi {
 		String responseData = null;
 		JSONObject json = null;
 
-		Log.d(LOG_TAG, "UriBuilder: " + UriBuilder.toString());
-		Log.d(LOG_TAG, "params: " + params.toString());
+		//Log.d(LOG_TAG, "UriBuilder: " + UriBuilder.toString());
+		//Log.d(LOG_TAG, "params: " + params.toString());
 
 		try {
 			if (params.size() > 0) {
@@ -75,7 +75,7 @@ public class CwgApi extends BaseCwgApi {
 				responseData = Communicator.executeHttpGet(UriBuilder);
 			}
 		} catch (Exception e) {
-			Log.d(LOG_TAG, "call Exception:" + e.getMessage());
+			Log.e(LOG_TAG, "call Exception:" + e.getMessage());
 			throw new DataFailed(e.getMessage());
 		}
 
@@ -84,7 +84,7 @@ public class CwgApi extends BaseCwgApi {
 		if (responseData != null) {
 			try {
 				json = new JSONObject(responseData);
-				Log.i(LOG_TAG, json.toString());
+				//Log.i(LOG_TAG, json.toString());
 				if (!json.getBoolean(Comm.API_SUCCESS_NAME)) {
 					switch (json.getInt("ErrorCode")) {
 					case Exceptions.API_ERROR_103:
@@ -133,7 +133,7 @@ public class CwgApi extends BaseCwgApi {
 		} catch (InvalidUsernameOrPassword e) {
 			throw new LoginException(e.getMessage());
 		} catch (Exception e) {
-			Log.w(LOG_TAG, e.getMessage());
+			Log.e(LOG_TAG, e.getMessage());
 		}
 		return isLogged;
 
@@ -166,12 +166,12 @@ public class CwgApi extends BaseCwgApi {
 				preferencesEditor.commit();
 			}
 		} catch (DataFailed e) {
-			Log.w(LOG_TAG, "DataFailed EXCEPTION");
+			Log.e(LOG_TAG, "DataFailed EXCEPTION");
 			throw new DataFailed(e.getMessage());
 		} catch (InvalidUsernameOrPassword e) {
 			throw new DialogException(e.getMessage());
 		} catch (DialogException e) {
-			Log.w(LOG_TAG, "JSONLOGIN DialogException");
+			Log.e(LOG_TAG, "JSONLOGIN DialogException");
 			throw new DialogException(e.getMessage());
 		}
 

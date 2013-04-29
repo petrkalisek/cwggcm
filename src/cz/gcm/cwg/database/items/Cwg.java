@@ -39,12 +39,7 @@ public class Cwg {
 	
 	public Cursor getAllCwg() {
 		close();
-		
-		//Log.d("Cwg::getAllCwg", "id: no ;)");
 		Cursor cursor = getReadableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
-		
-		dumpCursor(cursor);
-		
 		return cursor;
 	}
 
@@ -57,25 +52,19 @@ public class Cwg {
 			String[] selectionArgs = { String.valueOf(id) };
 			cursor = getReadableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
 					null, null, ORDER_BY);
-			dumpCursor(cursor);
 			cursor.close();
 		}catch(Exception e){
 			Log.w("getCwg EXCEPTION", e.getMessage());
 			return null;
 		}
-		
-		
-		//Log.i("getCwg::return", ""+id);
 		return cursor;
 	}
 
 	public boolean deleteCwg(long id) {
 		close();
-		
-		//Log.d("Cwg::deleteCwg", "id:"+id);
+
 		String[] selectionArgs = { String.valueOf(id) };
 		int deletedCount = getWritableDb().delete(TABLE_NAME, COLUMN_ID + "= ?", selectionArgs);
-		
 		return deletedCount > 0;
 	}
 
@@ -96,7 +85,6 @@ public class Cwg {
 	
 	public long updateCwg(int id, ContentValues values) {
 		close();
-		//Log.d("Cwg::addCwg", "values:"+values.toString());
 		long count = 0;
 		if(getCwg(id) != null ){
 			count = getWritableDb().update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});	

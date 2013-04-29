@@ -26,19 +26,33 @@ public class MyCollectionActivity extends BaseActivity {
 	private ProgressDialog progressDialog;
 	private Cwg cwg = null;
 	private Cursor databaseResult = null;
+	
+	private Boolean dataLoaded = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_collection);
-
+		cwg = new Cwg(this);
+		loadData(false);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		cwg = new Cwg(this);
-		loadData(false);
+		Log.d("MyCollectionActivity::onStart", "onStart");
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d("MyCollectionActivity::onResume", "onResume");
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d("MyCollectionActivity::onPause", "onPause");
 	}
 
 	@Override
@@ -65,16 +79,15 @@ public class MyCollectionActivity extends BaseActivity {
 	}
 
 	private void loadData(Boolean force) {
-		
-		//showProcessDialog();
 				
 		SharedPreferences prefsRead = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 
 		Boolean useCacheData = prefsRead.getBoolean("pref_useCacheData", false);
 		Log.d("useCacheData", useCacheData.toString());
+		Log.d("dataLoaded", dataLoaded.toString());
 
-		if (!useCacheData || force) {
+		if ( (!useCacheData || force) && !dataLoaded) {
 			
 			try {
 				MyCollection myCollection = new MyCollection();
@@ -84,8 +97,8 @@ public class MyCollectionActivity extends BaseActivity {
 					JSONObject myCollectionResult = Async.execute(myCollection)
 							.get();
 
-					Log.d("MyCollectionActivity::jsonResult",
-							myCollectionResult.toString());
+					//Log.d("MyCollectionActivity::jsonResult",
+					//		myCollectionResult.toString());
 
 					if (myCollectionResult.optJSONArray("Export").length() > 0) {
 						JSONArray exportArray = myCollectionResult
@@ -143,6 +156,7 @@ public class MyCollectionActivity extends BaseActivity {
 						+ e.toString());
 			}
 		}
+		dataLoaded = true;
 		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor databaseResult = cwg.getAllCwg();

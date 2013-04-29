@@ -48,9 +48,9 @@ abstract class BaseActivity extends Activity {
 	
 	
 	
-	protected class AsyncTaskActivity extends
+	final class AsyncTaskActivity extends
 			AsyncTask<BaseCwgApi, String, JSONObject> {
-
+	   
 		protected void onCreate(){
 			Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_LONG).show();
 		}
@@ -59,7 +59,6 @@ abstract class BaseActivity extends Activity {
 		protected JSONObject doInBackground(BaseCwgApi... object){
 			
 			JSONObject jsonResult = new JSONObject();
-			
 			
 			try{
 				calledObject = object[0];
@@ -72,9 +71,6 @@ abstract class BaseActivity extends Activity {
 			}catch( Exception e){
 				
 			}
-			
-			Log.d("doInBackground:return", jsonResult.toString());
-			
 			return jsonResult;
 		}
 
