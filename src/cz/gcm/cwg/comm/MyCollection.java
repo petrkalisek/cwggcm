@@ -6,10 +6,10 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 import cz.gcm.cwg.constants.Comm;
@@ -20,7 +20,12 @@ import cz.gcm.cwg.exceptions.LoginException;
 public class MyCollection extends CwgApi {
 
 	private static final String LOG_TAG = MyCollection.class.getName();
-
+	private Context context;
+	
+	public MyCollection(Context context){
+		this.context = context;
+	}
+	
 	public JSONObject getResult() {
 
 		JSONObject jsonCwgInfo = null;
@@ -46,15 +51,17 @@ public class MyCollection extends CwgApi {
 
 	private void saveData(JSONObject myCollectionResult) {
 		
-		Log.w("MyCollection::saveData::JSONObject","WWWW");
 		
-		Cwg cwg = new Cwg(getApplicationContext());
-		Log.w("MyCollection::saveData::JSONObject","XXXX");
-		
-		Log.i("MyCollection::saveData::JSONObject", ""+myCollectionResult.optJSONArray("Export").length());
 		
 		try {
 
+			Log.w("MyCollection::saveData::JSONObject","WWWW");
+			
+			Cwg cwg = new Cwg(context);
+			Log.w("MyCollection::saveData::JSONObject","XXXX");
+			
+			Log.i("MyCollection::saveData::JSONObject", ""+myCollectionResult.optJSONArray("Export").length());
+			
 			if (myCollectionResult.optJSONArray("Export").length() > 0) {
 				
 				
@@ -89,7 +96,7 @@ public class MyCollection extends CwgApi {
 				}
 			}
 
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			Log.w("MyCollection::saveData", e.getMessage());
 		}
 

@@ -40,7 +40,14 @@ abstract class BaseActivity extends Activity {
 			progressDialog.setCancelable(true);
 			progressDialog.setMessage("Loading data, please wait ...");
 		}
-		progressDialog.show();
+		
+		runOnUiThread(new Runnable() {
+		    public void run() {
+		    	progressDialog.show();
+		    }
+		});
+		
+		
 	}
 	
 	protected void hideProcessDialog(){

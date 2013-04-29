@@ -35,7 +35,7 @@ public class MyCollectionActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_collection);
 		cwg = new Cwg(this);
-		loadData(false);
+		
 	}
 
 	@Override
@@ -48,6 +48,7 @@ public class MyCollectionActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.d("MyCollectionActivity::onResume", "onResume");
+		loadData(false);
 	}
 	
 	@Override
@@ -87,66 +88,16 @@ public class MyCollectionActivity extends BaseActivity {
 		Log.d("useCacheData", useCacheData.toString());
 		Log.d("dataLoaded", dataLoaded.toString());
 
-		//showProcessDialog(this);
-
 		if ( (!useCacheData || force) && !dataLoaded) {
 			
 			try {
 				Log.d("loadData", this.getApplicationContext().toString());
 				ActivityComm activityCommInstance = ActivityComm.getInstance(this);
 				
-				JSONObject myCollectionResult = activityCommInstance.callObject(new MyCollection());
+				JSONObject myCollectionResult = activityCommInstance.callObject(new MyCollection(this));
 				Log.w("MyCollectionActivity", "loadData::MyCollection"
 						+ myCollectionResult.toString());
-						
-				
-				/*
-				AsyncTaskActivity Async = new AsyncTaskActivity( );
 
-				try {
-					JSONObject myCollectionResult = Async.execute(this)
-							.get();
-
-					//Log.d("MyCollectionActivity::jsonResult",
-					//		myCollectionResult.toString());
-
-					if (myCollectionResult.optJSONArray("Export").length() > 0) {
-						JSONArray exportArray = myCollectionResult
-								.getJSONArray("Export");
-						Cursor c = null;
-						
-						for (int i = 0; i < exportArray.length(); i++) {
-							JSONObject t = (JSONObject) exportArray.get(i);
-							JSONArray collection = t.optJSONArray("collection");
-							if (collection != null) {
-								Log.i("MyCollectionActivity",
-										"ID:" + t.getInt("id"));
-								Log.i("MyCollectionActivity", "collection:"
-										+ collection.toString());
-							} else {
-								Log.i("MyCollectionActivity",
-										"NOT COLLECTION ID:" + t.getInt("id"));
-							}
-
-							// TODO: udelat nejak insert ale i jako update, kdyz
-							// znam ID
-							ContentValues values = new ContentValues();
-							values.put(Cwg.COLUMN_ID, t.optString("id"));
-							values.put(Cwg.COLUMN_NAME, t.optString("name"));
-							values.put(Cwg.COLUMN_CWGNO, t.optString("cwgno"));
-							values.put(Cwg.COLUMN_VERSION,	t.optString("version"));
-							values.put(Cwg.COLUMN_IMAGE, t.optString("image"));
-							
-							long id = cwg.addCwg(values);
-							
-							Log.i("after getCwg","" + t.getInt("id")+ " ins id:"+id);
-						}
-					}
-
-				} catch (Exception e) {
-					Log.w("MyCollectionActivity", "Async.execute exception 1:"
-							+ e.toString());
-				}*/
 			} catch (Exception e) {
 				Log.w("MyCollectionActivity", "Async.execute exception 2:"
 						+ e.toString());
@@ -160,7 +111,7 @@ public class MyCollectionActivity extends BaseActivity {
 		listenersList.setAdapter(new SimpleListItem(this, databaseResult));
 		Log.i("loadData::cursor", databaseResult.toString()+" "+databaseResult.getCount());
 		
-		//hideProcessDialog();
+		hideProcessDialog();
 
 	}
 	/*

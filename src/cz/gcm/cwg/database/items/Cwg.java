@@ -38,14 +38,14 @@ public class Cwg {
 	}
 	
 	public Cursor getAllCwg() {
+		/*
 		Cursor mCount= getWritableDb().rawQuery("select count(*) from "+TABLE_NAME, null);
 		mCount.moveToFirst();
 		int count= mCount.getInt(0);
 		Log.i("getAllCwg::count", "count:"+count);
 		mCount.close();
-		
+		*/
 		Cursor cursor = getWritableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
-		dumpCursor(cursor);
 		return cursor;
 	}
 
@@ -57,7 +57,7 @@ public class Cwg {
 			String[] selectionArgs = { String.valueOf(id) };
 			cursor = getWritableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
 					null, null, ORDER_BY);
-			cursor.close();
+			//cursor.close();
 		}catch(Exception e){
 			Log.w("getCwg EXCEPTION", e.getMessage());
 			return null;
@@ -84,7 +84,6 @@ public class Cwg {
 			Log.d("Cwg::insert", "");
 			id = getWritableDb().insert(TABLE_NAME, null, values);
 		}
-		getWritableDb().close();
 		
 		return id;
 	}
@@ -98,16 +97,20 @@ public class Cwg {
 		return count;
 	}
 
-	
-	private SQLiteDatabase getReadableDb(){
-		return getWritableDb();
+	private void close(){
+		if(getWritableDb().isOpen()){
+			getWritableDb().close();
+			writableDb = null;
+		}
 	}
+	
 	
 	private SQLiteDatabase getWritableDb(){
 		
 		if(writableDb == null){
 			writableDb = openHelper.getWritableDatabase();	
 		}
+		
 		return writableDb;
 	}
 	
