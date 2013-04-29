@@ -19,5 +19,6 @@ public class Comm {
 	public static final String API_ERROR_LOGIN_NEEDED = "You must specify username and password.";
 	public static final String API_ERROR_INVALID_LOGIN = "Invalid username or password.";
 	public static final String API_ERROR_MUST_LOG_IN = "You must first log in.";
-	
+
+	public static final String DIR_IMAGES = "/sdcard/data/CwgGCM/";
 }

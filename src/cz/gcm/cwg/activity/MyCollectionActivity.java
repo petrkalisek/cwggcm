@@ -34,8 +34,7 @@ public class MyCollectionActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_collection);
-		cwg = new Cwg(this);
-		
+		cwg = Cwg.getInstance(getApplicationContext());
 	}
 
 	@Override
@@ -47,14 +46,14 @@ public class MyCollectionActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d("MyCollectionActivity::onResume", "onResume");
+		//Log.d("MyCollectionActivity::onResume", "onResume");
 		loadData(false);
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.d("MyCollectionActivity::onPause", "onPause");
+		//Log.d("MyCollectionActivity::onPause", "onPause");
 	}
 
 	@Override
@@ -65,8 +64,6 @@ public class MyCollectionActivity extends BaseActivity {
 	}
 
 	public void refreshData(View view) {
-		Toast.makeText(getApplicationContext(), "refreshData",
-				Toast.LENGTH_LONG).show();
 		loadData(true);
 	}
 
@@ -91,12 +88,8 @@ public class MyCollectionActivity extends BaseActivity {
 		if ( (!useCacheData || force) && !dataLoaded) {
 			
 			try {
-				Log.d("loadData", this.getApplicationContext().toString());
 				ActivityComm activityCommInstance = ActivityComm.getInstance(this);
-				
-				JSONObject myCollectionResult = activityCommInstance.callObject(new MyCollection(this));
-				Log.w("MyCollectionActivity", "loadData::MyCollection"
-						+ myCollectionResult.toString());
+				JSONObject result = activityCommInstance.callObject(new MyCollection(this));
 
 			} catch (Exception e) {
 				Log.w("MyCollectionActivity", "Async.execute exception 2:"
@@ -109,7 +102,6 @@ public class MyCollectionActivity extends BaseActivity {
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor databaseResult = cwg.getAllCwg();
 		listenersList.setAdapter(new SimpleListItem(this, databaseResult));
-		Log.i("loadData::cursor", databaseResult.toString()+" "+databaseResult.getCount());
 		
 		hideProcessDialog();
 

@@ -21,11 +21,11 @@ public class MyCollection extends CwgApi {
 
 	private static final String LOG_TAG = MyCollection.class.getName();
 	private Context context;
-	
-	public MyCollection(Context context){
+
+	public MyCollection(Context context) {
 		this.context = context;
 	}
-	
+
 	public JSONObject getResult() {
 
 		JSONObject jsonCwgInfo = null;
@@ -50,24 +50,15 @@ public class MyCollection extends CwgApi {
 	}
 
 	private void saveData(JSONObject myCollectionResult) {
-		
-		
-		
+
 		try {
 
-			Log.w("MyCollection::saveData::JSONObject","WWWW");
-			
-			Cwg cwg = new Cwg(context);
-			Log.w("MyCollection::saveData::JSONObject","XXXX");
-			
-			Log.i("MyCollection::saveData::JSONObject", ""+myCollectionResult.optJSONArray("Export").length());
-			
+			Cwg cwg = Cwg.getInstance(context);
+
 			if (myCollectionResult.optJSONArray("Export").length() > 0) {
-				
-				
+
 				JSONArray exportArray = myCollectionResult
 						.getJSONArray("Export");
-				Cursor c = null;
 
 				for (int i = 0; i < exportArray.length(); i++) {
 					JSONObject t = (JSONObject) exportArray.get(i);
@@ -81,8 +72,6 @@ public class MyCollection extends CwgApi {
 								"NOT COLLECTION ID:" + t.getInt("id"));
 					}
 
-					// TODO: udelat nejak insert ale i jako update, kdyz
-					// znam ID
 					ContentValues values = new ContentValues();
 					values.put(Cwg.COLUMN_ID, t.optString("id"));
 					values.put(Cwg.COLUMN_NAME, t.optString("name"));

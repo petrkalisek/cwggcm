@@ -37,8 +37,6 @@ public class SimpleListItem implements ListAdapter, OnClickListener   {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		Log.i("SimpleListItem::getView", ""+position);
-		
 		View row = convertView;
 		if (row == null) {
 			row = mInflater.inflate(R.layout.simple_list_item,	null);
@@ -54,8 +52,6 @@ public class SimpleListItem implements ListAdapter, OnClickListener   {
 			txtDesc.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_CWGNO)));
 			id.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID)));
 			version.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_VERSION)));
-			
-			Log.i("SimpleListItem::getView", ""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID)));
 		}
 		return row;
 	}

@@ -27,6 +27,8 @@ public class Cwg {
 			+ COLUMN_IMAGE + " text not null" + ");";
 	
 	protected static final String ORDER_BY = COLUMN_NAME + " ASC";
+	
+	private static Cwg mInstance = null;
 
 	private SQLiteOpenHelper openHelper = null;
 	private SQLiteDatabase writableDb = null;
@@ -37,27 +39,24 @@ public class Cwg {
 		openHelper = CwgDatabaseHelper.getInstance(context);
 	}
 	
+	public static Cwg getInstance(Context ctx) {
+        if (mInstance == null) {
+            mInstance = new Cwg(ctx.getApplicationContext());
+        }
+        return mInstance;
+    }
+	
 	public Cursor getAllCwg() {
-		/*
-		Cursor mCount= getWritableDb().rawQuery("select count(*) from "+TABLE_NAME, null);
-		mCount.moveToFirst();
-		int count= mCount.getInt(0);
-		Log.i("getAllCwg::count", "count:"+count);
-		mCount.close();
-		*/
 		Cursor cursor = getWritableDb().query(TABLE_NAME, columns, null, null, null, null, ORDER_BY);
 		return cursor;
 	}
 
 	public Cursor getCwg(long id) {
-		//Log.d("Cwg::getCwg", "id:"+id);
 		Cursor cursor = null;
-		
 		try{
 			String[] selectionArgs = { String.valueOf(id) };
 			cursor = getWritableDb().query(TABLE_NAME, columns, COLUMN_ID + "= ?", selectionArgs,
 					null, null, ORDER_BY);
-			//cursor.close();
 		}catch(Exception e){
 			Log.w("getCwg EXCEPTION", e.getMessage());
 			return null;
@@ -72,16 +71,11 @@ public class Cwg {
 	}
 
 	public long addCwg(ContentValues values) {
-		Log.d("Cwg::addCwg", "values:"+values.toString());
-		Log.d("Cwg::addCwg", "getCwg("+values.getAsLong(COLUMN_ID)+"):"+getCwg(values.getAsLong(COLUMN_ID)).toString());
-
 		long id = 0;
 		
 		if(getCwg(values.getAsLong(COLUMN_ID)).getCount() > 0){
-			Log.d("Cwg::updateCwg", "");
 			id = updateCwg(values.getAsLong(COLUMN_ID), values);
 		}else{
-			Log.d("Cwg::insert", "");
 			id = getWritableDb().insert(TABLE_NAME, null, values);
 		}
 		
@@ -96,13 +90,14 @@ public class Cwg {
 		}
 		return count;
 	}
-
-	private void close(){
-		if(getWritableDb().isOpen()){
-			getWritableDb().close();
-			writableDb = null;
+	
+	
+	public void getImage(long id){
+		if(getCwg(id) != null ){
+			
 		}
 	}
+	
 	
 	
 	private SQLiteDatabase getWritableDb(){
