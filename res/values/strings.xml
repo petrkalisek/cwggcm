@@ -12,7 +12,7 @@
     <string name="title_activity_my_cwg">MyCwgActivity</string>
     <string name="title_activity_setting">Settings</string>
 
-     <!-- setting -->
+    <!-- setting -->
     <!-- login -->
     <string name="pref_loginValuesTitle">Login data</string>
     <string name="pref_loginUserSummary">Login user for app (is same as password to http://cwg.gcm.cz/) </string>
@@ -25,7 +25,7 @@
     <string name="pref_storageTitle">Storage</string>
     <string name="pref_enableLocalDbSummary">Enable local database for faster loading. Data are updated ONLY by show detail item (experimental)</string>
     <string name="pref_enableLocalDbTitle">Enable local database</string>
-    
+
     <!-- connection setting -->
     <string name="pref_connectionTitle">Connection</string>
     <string name="pref_alwaysOnlineTitle">Always online</string>
@@ -37,5 +37,6 @@
     <string name="button_getMyTitle">Get my</string>
     <string name="title_activity_api_loader">ApiLoaderActivity</string>
     <string name="title_activity_list">ListActivity</string>
-    
+    <string name="title_activity_detail_cwg">DetailCwgActivity</string>
+
 </resources>

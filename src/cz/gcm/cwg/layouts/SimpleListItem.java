@@ -1,6 +1,5 @@
 package cz.gcm.cwg.layouts;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
@@ -8,17 +7,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-
-import com.example.cwggmc.R;
-
+import cz.gcm.cwg.R;
 import cz.gcm.cwg.database.items.Cwg;
 
 //OnLongClickListener
-public class SimpleListItem implements ListAdapter, OnClickListener   {
+public class SimpleListItem implements ListAdapter   {
 
 	
 	public LayoutInflater mInflater=null;
@@ -53,26 +49,22 @@ public class SimpleListItem implements ListAdapter, OnClickListener   {
 			id.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID)));
 			version.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_VERSION)));
 		}
+	
 		return row;
 	}
-	
-	@Override
-	public void onClick(View v) {
-		Log.d("onClick", v.findViewById(R.id.viewId).toString());
-		AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-		alertDialog.setTitle("Click");
-		alertDialog.show();
 		
-	}
-	
 	@Override
 	public long getItemId(int position) {
-		return getItem(position).getLong(Cwg.COLUMN_ID);
+		data.moveToFirst();
+		data.moveToPosition(position);
+		
+		return data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID));
 	}
 	
-	public Bundle getItem(int position){
+	public Cursor getItem(int position){
+		data.moveToFirst();
 		data.moveToPosition(position);
-		return data.getExtras();
+		return data;
 	}
 	
 /*
@@ -186,7 +178,9 @@ public class SimpleListItem implements ListAdapter, OnClickListener   {
 		
 	@Override
 	public int getItemViewType( int number) {
+		
 		return number;
 	}
-	
+
+
 }

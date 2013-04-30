@@ -1,10 +1,9 @@
 package cz.gcm.cwg.activity;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
-import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,11 +11,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import com.example.cwggmc.R;
-
+import cz.gcm.cwg.R;
 import cz.gcm.cwg.comm.ActivityComm;
 import cz.gcm.cwg.comm.MyCollection;
 import cz.gcm.cwg.database.items.Cwg;
@@ -64,6 +62,7 @@ public class MyCollectionActivity extends BaseActivity {
 	}
 
 	public void refreshData(View view) {
+		dataLoaded = false;
 		loadData(true);
 	}
 
@@ -85,11 +84,11 @@ public class MyCollectionActivity extends BaseActivity {
 		Log.d("useCacheData", useCacheData.toString());
 		Log.d("dataLoaded", dataLoaded.toString());
 
-		if ( (!useCacheData || force) && !dataLoaded) {
+		if ( !useCacheData && !dataLoaded) {
 			
 			try {
-				ActivityComm activityCommInstance = ActivityComm.getInstance(this);
-				JSONObject result = activityCommInstance.callObject(new MyCollection(this));
+				ActivityComm activityCommInstance = ActivityComm.getInstance(MyCollectionActivity.this);
+				JSONObject result = activityCommInstance.callObject(new MyCollection(MyCollectionActivity.this));
 
 			} catch (Exception e) {
 				Log.w("MyCollectionActivity", "Async.execute exception 2:"
@@ -101,10 +100,28 @@ public class MyCollectionActivity extends BaseActivity {
 		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor databaseResult = cwg.getAllCwg();
-		listenersList.setAdapter(new SimpleListItem(this, databaseResult));
+		SimpleListItem SimpleListItem = new SimpleListItem(this, databaseResult);
+		listenersList.setAdapter(SimpleListItem);
+		listenersList.setOnItemClickListener(new OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v , int position, long id){
+            	Intent i = new Intent(MyCollectionActivity.this , DetailCwgActivity.class);
+            	i.putExtra("id", id);
+                startActivity(i);
+            }
+        });
+        
 		
 		hideProcessDialog();
 
+	}
+	
+
+	
+	protected void showDialog(){
+		ProgressDialog progress = new ProgressDialog(this);
+		progress.setMessage("Loading...");
+		progress.show();
 	}
 	/*
 	@Override

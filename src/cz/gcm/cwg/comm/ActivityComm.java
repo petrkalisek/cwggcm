@@ -26,11 +26,9 @@ public class ActivityComm extends Activity {
 	}
 
 	public JSONObject callObject(BaseCwgApi object) {
-		ProgressDialog progress = new ProgressDialog(context);
-		progress.setMessage("Loading...");
 
 		if (asyncTaskActivityInstance == null) {
-			asyncTaskActivityInstance = new AsyncTaskActivity(progress);
+			asyncTaskActivityInstance = new AsyncTaskActivity();
 		}
 
 		JSONObject result = new JSONObject();
@@ -49,14 +47,6 @@ public class ActivityComm extends Activity {
 			AsyncTask<BaseCwgApi, String, JSONObject> {
 
 		private ProgressDialog progress;
-
-		public AsyncTaskActivity(ProgressDialog progress) {
-			this.progress = progress;
-		}
-
-		public void onPreExecute() {
-			progress.show();
-		}
 
 		@Override
 		protected JSONObject doInBackground(BaseCwgApi... calledObject) {
@@ -82,7 +72,7 @@ public class ActivityComm extends Activity {
 
 		@Override
 		protected void onPostExecute(JSONObject result) {
-			progress.dismiss();
+			
 		}
 
 		@Override

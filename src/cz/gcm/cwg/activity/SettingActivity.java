@@ -2,8 +2,7 @@ package cz.gcm.cwg.activity;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-
-import com.example.cwggmc.R;
+import cz.gcm.cwg.R;
 
 
 

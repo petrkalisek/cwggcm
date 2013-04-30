@@ -1,18 +1,12 @@
 package cz.gcm.cwg.activity;
 
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.widget.Toast;
-
-import com.example.cwggmc.R;
-
+import cz.gcm.cwg.R;
 import cz.gcm.cwg.comm.BaseCwgApi;
 
 abstract class BaseActivity extends Activity {

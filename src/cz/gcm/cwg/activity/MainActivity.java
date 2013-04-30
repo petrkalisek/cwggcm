@@ -2,7 +2,6 @@ package cz.gcm.cwg.activity;
 
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +9,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.example.cwggmc.R;
-
+import cz.gcm.cwg.R;
 import cz.gcm.cwg.comm.ActivityComm;
 import cz.gcm.cwg.comm.CwgInfo;
-import cz.gcm.cwg.comm.MyCollection;
 
 
 public class MainActivity extends BaseActivity {
