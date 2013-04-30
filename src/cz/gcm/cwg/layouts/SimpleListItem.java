@@ -39,7 +39,7 @@ public class SimpleListItem implements ListAdapter   {
 		}
 		
 		if( data.moveToPosition(position) ){
-			TextView txtTitle = (TextView) row.findViewById(R.id.title);
+			TextView txtTitle = (TextView) row.findViewById(R.id.detailTitle);
 			TextView txtDesc = (TextView) row.findViewById(R.id.desc);
 			TextView id = (TextView) row.findViewById(R.id.viewId);
 			TextView version = (TextView) row.findViewById(R.id.version);

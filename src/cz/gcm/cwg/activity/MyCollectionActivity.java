@@ -32,7 +32,7 @@ public class MyCollectionActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_collection);
-		cwg = Cwg.getInstance(getApplicationContext());
+		
 	}
 
 	@Override
@@ -44,6 +44,8 @@ public class MyCollectionActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		cwg = Cwg.getInstance(getApplicationContext());
+		cwg.close();
 		//Log.d("MyCollectionActivity::onResume", "onResume");
 		loadData(false);
 	}
@@ -84,7 +86,7 @@ public class MyCollectionActivity extends BaseActivity {
 		Log.d("useCacheData", useCacheData.toString());
 		Log.d("dataLoaded", dataLoaded.toString());
 
-		if ( !useCacheData && !dataLoaded) {
+		if ( !useCacheData || !dataLoaded) {
 			
 			try {
 				ActivityComm activityCommInstance = ActivityComm.getInstance(MyCollectionActivity.this);
@@ -100,6 +102,7 @@ public class MyCollectionActivity extends BaseActivity {
 		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
 		Cursor databaseResult = cwg.getAllCwg();
+		
 		SimpleListItem SimpleListItem = new SimpleListItem(this, databaseResult);
 		listenersList.setAdapter(SimpleListItem);
 		listenersList.setOnItemClickListener(new OnItemClickListener(){
@@ -110,7 +113,6 @@ public class MyCollectionActivity extends BaseActivity {
                 startActivity(i);
             }
         });
-        
 		
 		hideProcessDialog();
 
@@ -123,16 +125,15 @@ public class MyCollectionActivity extends BaseActivity {
 		progress.setMessage("Loading...");
 		progress.show();
 	}
-	/*
+	
 	@Override
-	protected void onStop() {
-		
-		cwg.onClose();
-		Log.i("MyCollectionActivity", "onStop");
+	protected void onDestroy() {
+		Cwg.getInstance(getApplicationContext()).close();
+		Log.i("MyCollectionActivity", "onDestroy");
 		super.onStop();
 
 	}
-
+	/*
 	@Override
 	protected void onPause() {
 		cwg.onClose();

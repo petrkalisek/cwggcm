@@ -13,14 +13,6 @@
         android:clickable="false" >
 
         <Button
-            android:id="@+id/myCollectionButton"
-            style="@style/buttonStyle"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:onClick="clickMyCollection"
-            android:text="@string/btn_myCollection" />
-
-        <Button
             android:id="@+id/searchInCatalogButton"
             style="@style/buttonStyle"
             android:layout_width="100dp"
@@ -50,6 +42,17 @@
             android:layout_toRightOf="@+id/noActionBbutton"
             android:onClick="settingActivity"
             android:text="@string/btn_settings" />
+
+        <Button
+            android:id="@+id/myCollectionButton"
+            style="@style/buttonStyle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:onClick="clickMyCollection"
+            android:text="@string/btn_myCollection" />
+
     </RelativeLayout>
 
     <!-- 

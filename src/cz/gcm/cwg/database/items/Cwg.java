@@ -43,6 +43,7 @@ public class Cwg {
         if (mInstance == null) {
             mInstance = new Cwg(ctx.getApplicationContext());
         }
+        
         return mInstance;
     }
 	
@@ -61,6 +62,7 @@ public class Cwg {
 			Log.w("getCwg EXCEPTION", e.getMessage());
 			return null;
 		}
+		cursor.moveToFirst();
 		return cursor;
 	}
 
@@ -92,17 +94,25 @@ public class Cwg {
 	}
 	
 	
+	
 	public void getImage(long id){
 		if(getCwg(id) != null ){
 			
 		}
 	}
 	
+	public void close(){
+		Log.i("Cwg::close","close");
+		if( getWritableDb() != null && getWritableDb().isOpen()){
+			getWritableDb().close();
+			openHelper.close();
+		}
+	}
 	
 	
 	private SQLiteDatabase getWritableDb(){
 		
-		if(writableDb == null){
+		if(writableDb == null || !writableDb.isOpen()){
 			writableDb = openHelper.getWritableDatabase();	
 		}
 		
