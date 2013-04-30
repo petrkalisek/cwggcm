@@ -1,5 +1,7 @@
 package cz.gcm.cwg.activity;
 
+import java.util.List;
+
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
@@ -18,11 +20,11 @@ import cz.gcm.cwg.R;
 import cz.gcm.cwg.comm.ActivityComm;
 import cz.gcm.cwg.comm.MyCollection;
 import cz.gcm.cwg.database.items.Cwg;
-import cz.gcm.cwg.layouts.SimpleListItem;
+import cz.gcm.cwg.layouts.SimpleCwgItem;
 
 public class MyCollectionActivity extends BaseActivity {
 
-	private ProgressDialog progressDialog;
+	
 	private Cwg cwg = null;
 	private Cursor databaseResult = null;
 	
@@ -32,6 +34,8 @@ public class MyCollectionActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_collection);
+		
+		
 		
 	}
 
@@ -44,8 +48,7 @@ public class MyCollectionActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		cwg = Cwg.getInstance(getApplicationContext());
-		cwg.close();
+		
 		//Log.d("MyCollectionActivity::onResume", "onResume");
 		loadData(false);
 	}
@@ -87,11 +90,10 @@ public class MyCollectionActivity extends BaseActivity {
 		Log.d("dataLoaded", dataLoaded.toString());
 
 		if ( !useCacheData || !dataLoaded) {
-			
 			try {
 				ActivityComm activityCommInstance = ActivityComm.getInstance(MyCollectionActivity.this);
 				JSONObject result = activityCommInstance.callObject(new MyCollection(MyCollectionActivity.this));
-
+				Log.d("MyCollectionActivity::callObject", "result:"+result.toString());
 			} catch (Exception e) {
 				Log.w("MyCollectionActivity", "Async.execute exception 2:"
 						+ e.toString());
@@ -99,22 +101,25 @@ public class MyCollectionActivity extends BaseActivity {
 		}
 		dataLoaded = true;
 		
-		
 		ListView listenersList = (ListView) findViewById(R.id.cwgList);
-		Cursor databaseResult = cwg.getAllCwg();
 		
-		SimpleListItem SimpleListItem = new SimpleListItem(this, databaseResult);
-		listenersList.setAdapter(SimpleListItem);
-		listenersList.setOnItemClickListener(new OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v , int position, long id){
-            	Intent i = new Intent(MyCollectionActivity.this , DetailCwgActivity.class);
-            	i.putExtra("id", id);
-                startActivity(i);
-            }
-        });
+		try{
+			List<Cwg> List = getCwgDao().queryForAll();
+			
+			SimpleCwgItem SimpleListItem = new SimpleCwgItem(this, List);
+			listenersList.setAdapter(SimpleListItem);
+			listenersList.setOnItemClickListener(new OnItemClickListener(){
+	            @Override
+	            public void onItemClick(AdapterView<?> parent, View v , int position, long id){
+	            	Intent i = new Intent(MyCollectionActivity.this , DetailCwgActivity.class);
+	            	i.putExtra("id", id);
+	                startActivity(i);
+	            }
+	        });	
+		}catch(Exception e){
+			Log.w("MyCollectionActivity::loadData", e.getMessage());
+		}
 		
-		hideProcessDialog();
 
 	}
 	
@@ -128,9 +133,9 @@ public class MyCollectionActivity extends BaseActivity {
 	
 	@Override
 	protected void onDestroy() {
-		Cwg.getInstance(getApplicationContext()).close();
+		
 		Log.i("MyCollectionActivity", "onDestroy");
-		super.onStop();
+		super.onDestroy();
 
 	}
 	/*

@@ -30,7 +30,7 @@ public class DetailCwgActivity extends Activity {
 	}
 
 	private void renderDetail(long id){
-		
+		/*
 		Cwg cwgInstance = Cwg.getInstance(getApplicationContext());
 		Cursor cwg = cwgInstance.getCwg(id);
 		
@@ -41,11 +41,12 @@ public class DetailCwgActivity extends Activity {
 		textViewDetailTitle.setText(cwg.getString(cwg.getColumnIndexOrThrow(Cwg.COLUMN_NAME)));
 		
 		cwgInstance.close();
+		*/
 	}
 	
 	@Override
 	protected void onDestroy() {
-		Cwg.getInstance(getApplicationContext()).close();
+		//Cwg.getInstance(getApplicationContext()).close();
 		Log.i("DetailCwgActivity", "onDestroy");
 		super.onStop();
 

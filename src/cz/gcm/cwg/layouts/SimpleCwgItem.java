@@ -1,9 +1,10 @@
 package cz.gcm.cwg.layouts;
 
+import java.util.List;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +15,17 @@ import cz.gcm.cwg.R;
 import cz.gcm.cwg.database.items.Cwg;
 
 //OnLongClickListener
-public class SimpleListItem implements ListAdapter   {
+public class SimpleCwgItem implements ListAdapter   {
 
 	
 	public LayoutInflater mInflater=null;
 	public int type = 0;
 	private Context context = null;
-	private Cursor data;
+	private List<Cwg> data;
 
-	public SimpleListItem(Context contextIncome, Cursor dataIncome) {
+	public SimpleCwgItem(Context contextIncome, List<Cwg> dataIncome) {
 		context = contextIncome;
 		data = dataIncome;
-		data.moveToFirst();
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -38,33 +38,31 @@ public class SimpleListItem implements ListAdapter   {
 			row = mInflater.inflate(R.layout.simple_list_item,	null);
 		}
 		
-		if( data.moveToPosition(position) ){
+		Cwg item = data.get(position);
+		if(item != null){
 			TextView txtTitle = (TextView) row.findViewById(R.id.detailTitle);
 			TextView txtDesc = (TextView) row.findViewById(R.id.desc);
 			TextView id = (TextView) row.findViewById(R.id.viewId);
 			TextView version = (TextView) row.findViewById(R.id.version);
 			
-			txtTitle.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_NAME)));
-			txtDesc.setText(""+data.getString(data.getColumnIndexOrThrow(Cwg.COLUMN_CWGNO)));
-			id.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID)));
-			version.setText(""+data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_VERSION)));
+			txtTitle.setText(item.getName());
+			txtDesc.setText(item.getCwgNo());
+			id.setText(String.valueOf(item.getId()));
+			version.setText(String.valueOf(item.getVersion()));	
 		}
-	
+		
 		return row;
 	}
 		
 	@Override
 	public long getItemId(int position) {
-		data.moveToFirst();
-		data.moveToPosition(position);
 		
-		return data.getInt(data.getColumnIndexOrThrow(Cwg.COLUMN_ID));
+		Cwg item = data.get(position);
+		return item.getId(); 
 	}
 	
 	public Cursor getItem(int position){
-		data.moveToFirst();
-		data.moveToPosition(position);
-		return data;
+		return null;
 	}
 	
 /*
@@ -161,7 +159,7 @@ public class SimpleListItem implements ListAdapter   {
 
 	@Override
 	public int getCount() {
-		return data.getCount();
+		return data.size();
 	}
 	
 	// interface
@@ -169,7 +167,7 @@ public class SimpleListItem implements ListAdapter   {
 	
 	@Override
 	public boolean isEmpty() {
-		if(data.getCount() > 0){
+		if(getCount() > 0){
 			return false;
 		}else{
 			return true;

@@ -1,16 +1,11 @@
 package cz.gcm.cwg.database.items;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Bundle;
-import android.util.Log;
-import cz.gcm.cwg.database.CwgDatabaseHelper;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+@DatabaseTable(tableName = "cwg")
 public class Cwg {
-
+	
 	public static final String TABLE_NAME = "cwg";
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_CWGNO = "cwgno";
@@ -19,26 +14,67 @@ public class Cwg {
 	public static final String COLUMN_IMAGE = "image_url";
 	public static final String[] columns = { COLUMN_ID, COLUMN_CWGNO,
 			COLUMN_VERSION, COLUMN_NAME, COLUMN_IMAGE };
-
-	public static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS "
-			+ TABLE_NAME + "(" + COLUMN_ID + " integer primary key " + ", "
-			+ COLUMN_CWGNO + " text not null" + ", " + COLUMN_VERSION
-			+ " int not null" + ", " + COLUMN_NAME + " text not null collate nocase " + ", "
-			+ COLUMN_IMAGE + " text not null" + ");";
 	
 	protected static final String ORDER_BY = COLUMN_NAME + " ASC";
 	
-	private static Cwg mInstance = null;
-
-	private SQLiteOpenHelper openHelper = null;
-	private SQLiteDatabase writableDb = null;
-	private Context context = null;
-
-	public Cwg(Context ctx) {
-		context = ctx;
-		openHelper = CwgDatabaseHelper.getInstance(context);
+	
+	@DatabaseField(generatedId = false, id = true)
+	private long _id;
+	@DatabaseField(index = true, canBeNull = false)
+	private String name;
+	@DatabaseField(index = true, canBeNull = false)
+	private String cwgno;
+	@DatabaseField(index = true, canBeNull = false)
+	private int version;
+	@DatabaseField(canBeNull = true)
+	private String image_url;
+	
+	public Cwg() {
+		// needed by ormlite
 	}
 	
+	public void setId(int id){
+		this._id = id;
+	}
+	
+	public long getId(){
+		return this._id;
+	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public void setCwgNo(String cwgno){
+		this.cwgno = cwgno;
+	}
+	
+	public String getCwgNo(){
+		return this.cwgno;
+	}
+	
+	public void setVersion(int version){
+		this.version = version;
+	}
+	
+	public int getVersion(){
+		return this.version;
+	}
+	
+	public void setImageUrl(String image_url){
+		this.image_url = image_url;
+	}
+	
+	public String getImageUrl(){
+		return this.image_url;
+	}
+	
+	
+	/*
 	public static Cwg getInstance(Context ctx) {
         if (mInstance == null) {
             mInstance = new Cwg(ctx.getApplicationContext());
@@ -103,9 +139,10 @@ public class Cwg {
 	
 	public void close(){
 		Log.i("Cwg::close","close");
-		if( getWritableDb() != null && getWritableDb().isOpen()){
-			getWritableDb().close();
+		if( writableDb != null && writableDb.isOpen()){
+			writableDb.close();
 			openHelper.close();
+			writableDb = null;
 		}
 	}
 	
@@ -129,5 +166,5 @@ public class Cwg {
 	        Log.d("Cwg::dumpCursor", data.toString());
 	    }
 		
-	}
+	}*/
 }

@@ -6,21 +6,22 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import cz.gcm.cwg.database.items.Cwg;
+import cz.gcm.cwg.database.items.Users;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class also usually provides
  * the DAOs used by the other classes.
  */
-public class CwgDatabaseHelper extends BaseDatabaseHelper {
+public class UsersDatabaseHelper extends BaseDatabaseHelper {
 	// the DAO object we use to access the SimpleData table
-	private Dao<Cwg, Integer> cwgDao = null;
+	private Dao<Users, Integer> usersDao = null;
 
-	public CwgDatabaseHelper(Context context) {
+	public UsersDatabaseHelper(Context context) {
 		super(context);
 	}
 
@@ -31,9 +32,8 @@ public class CwgDatabaseHelper extends BaseDatabaseHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		try {
-			Log.i(CwgDatabaseHelper.class.getName(), "onCreate");
-			//TableUtils.dropTable(connectionSource, Cwg.class, true);
-			TableUtils.createTableIfNotExists(connectionSource, Cwg.class);
+			Log.i(UsersDatabaseHelper.class.getName(), "onCreate");
+			TableUtils.createTableIfNotExists(connectionSource, Users.class);
 			
 			long millis = System.currentTimeMillis();
 			/*
@@ -46,9 +46,9 @@ public class CwgDatabaseHelper extends BaseDatabaseHelper {
 			simple = new Users(millis + 1);
 			dao.create(simple);
 			*/
-			Log.i(CwgDatabaseHelper.class.getName(), "created new entries in onCreate: " + millis);
+			Log.i(UsersDatabaseHelper.class.getName(), "created new entries in onCreate: " + millis);
 		} catch (SQLException e) {
-			Log.e(CwgDatabaseHelper.class.getName(), "Can't create database", e);
+			Log.e(UsersDatabaseHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -59,32 +59,26 @@ public class CwgDatabaseHelper extends BaseDatabaseHelper {
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-		onCreate(db, connectionSource);
-		/*
-		if(oldVersion == 1 && newVersion == 2 ){
-			db.execSQL("ALTER TABLE "+ Cwg.TABLE_NAME +" ADD COLUMN timestamp DATE DEFAULT NULL");
-		}
-		
 		try {
-			Log.i(CwgDatabaseHelper.class.getName(), "onUpgrade");
-			TableUtils.dropTable(connectionSource, Cwg.class, true);
+			Log.i(UsersDatabaseHelper.class.getName(), "onUpgrade");
+			TableUtils.dropTable(connectionSource, Users.class, true);
 			// after we drop the old databases, we create the new ones
-			
+			onCreate(db, connectionSource);
 		} catch (SQLException e) {
-			Log.e(CwgDatabaseHelper.class.getName(), "Can't drop databases", e);
+			Log.e(UsersDatabaseHelper.class.getName(), "Can't drop databases", e);
 			throw new RuntimeException(e);
-		}*/
+		}
 	}
 
 	/**
 	 * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<Cwg, Integer> getCwgDao() throws SQLException {
-		if (cwgDao == null) {
-			cwgDao = getDao(Cwg.class);
+	public Dao<Users, Integer> getUsersDao() throws SQLException {
+		if (usersDao == null) {
+			usersDao = getDao(Users.class);
 		}
-		return cwgDao;
+		return usersDao;
 	}
 
 	/**
@@ -93,6 +87,6 @@ public class CwgDatabaseHelper extends BaseDatabaseHelper {
 	@Override
 	public void close() {
 		super.close();
-		cwgDao = null;
+		usersDao = null;
 	}
 }
