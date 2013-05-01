@@ -1,5 +1,9 @@
 package cz.gcm.cwg.activity;
 
+import java.util.List;
+
+import com.j256.ormlite.dao.Dao;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,7 +13,7 @@ import android.widget.TextView;
 import cz.gcm.cwg.R;
 import cz.gcm.cwg.database.items.Cwg;
 
-public class DetailCwgActivity extends Activity {
+public class DetailCwgActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +34,26 @@ public class DetailCwgActivity extends Activity {
 	}
 
 	private void renderDetail(long id){
-		/*
-		Cwg cwgInstance = Cwg.getInstance(getApplicationContext());
-		Cursor cwg = cwgInstance.getCwg(id);
 		
-		TextView textViewId = (TextView) findViewById(R.id.cwgId);
-		textViewId.setText(""+id);
+		int intId = (int) id;
+		try{
+			Cwg Cwg = getCwgDao().queryForId(intId);
+
+			TextView textViewId = (TextView) findViewById(R.id.cwgId);
+			textViewId.setText(""+id);
+			
+			TextView textViewDetailTitle = (TextView) findViewById(R.id.detailTitle);
+			textViewDetailTitle.setText(Cwg.getName());
+			
+			
+		}catch(Exception e){
+			
+		}
 		
-		TextView textViewDetailTitle = (TextView) findViewById(R.id.detailTitle);
-		textViewDetailTitle.setText(cwg.getString(cwg.getColumnIndexOrThrow(Cwg.COLUMN_NAME)));
 		
-		cwgInstance.close();
-		*/
+		
+		
+		
 	}
 	
 	@Override

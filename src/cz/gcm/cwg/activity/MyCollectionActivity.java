@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 import cz.gcm.cwg.R;
 import cz.gcm.cwg.comm.ActivityComm;
 import cz.gcm.cwg.comm.MyCollection;
@@ -111,6 +112,7 @@ public class MyCollectionActivity extends BaseActivity {
 			listenersList.setOnItemClickListener(new OnItemClickListener(){
 	            @Override
 	            public void onItemClick(AdapterView<?> parent, View v , int position, long id){
+	            	Toast.makeText(getApplicationContext(), "id:"+id, Toast.LENGTH_SHORT).show();
 	            	Intent i = new Intent(MyCollectionActivity.this , DetailCwgActivity.class);
 	            	i.putExtra("id", id);
 	                startActivity(i);

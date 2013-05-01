@@ -12,8 +12,9 @@ public class Cwg {
 	public static final String COLUMN_VERSION = "version";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_IMAGE = "image_url";
+	public static final String COLUMN_COMMENT = "comment";
 	public static final String[] columns = { COLUMN_ID, COLUMN_CWGNO,
-			COLUMN_VERSION, COLUMN_NAME, COLUMN_IMAGE };
+			COLUMN_VERSION, COLUMN_NAME, COLUMN_COMMENT, COLUMN_IMAGE };
 	
 	protected static final String ORDER_BY = COLUMN_NAME + " ASC";
 	
@@ -28,52 +29,66 @@ public class Cwg {
 	private int version;
 	@DatabaseField(canBeNull = true)
 	private String image_url;
+	@DatabaseField(canBeNull = true)
+	private String comment;
 	
 	public Cwg() {
 		// needed by ormlite
 	}
 	
-	public void setId(int id){
+	public Cwg setId(int id){
 		this._id = id;
+		return this;
 	}
 	
 	public long getId(){
 		return this._id;
 	}
 	
-	public void setName(String name){
+	public Cwg setName(String name){
 		this.name = name;
+		return this;
 	}
 	
 	public String getName(){
 		return this.name;
 	}
 	
-	public void setCwgNo(String cwgno){
+	public Cwg setCwgNo(String cwgno){
 		this.cwgno = cwgno;
+		return this;
 	}
 	
 	public String getCwgNo(){
 		return this.cwgno;
 	}
 	
-	public void setVersion(int version){
+	public Cwg setVersion(int version){
 		this.version = version;
+		return this;
 	}
 	
 	public int getVersion(){
 		return this.version;
 	}
 	
-	public void setImageUrl(String image_url){
+	public Cwg setImageUrl(String image_url){
 		this.image_url = image_url;
+		return this;
 	}
 	
 	public String getImageUrl(){
 		return this.image_url;
 	}
 	
+	public Cwg setComment(String comment){
+		this.comment = comment;
+		return this;
+	}
 	
+	public String getComment(){
+		return this.comment;
+	}
 	/*
 	public static Cwg getInstance(Context ctx) {
         if (mInstance == null) {

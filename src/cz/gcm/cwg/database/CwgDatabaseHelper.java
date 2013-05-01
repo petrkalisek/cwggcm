@@ -59,6 +59,12 @@ public class CwgDatabaseHelper extends BaseDatabaseHelper {
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+		try{
+			TableUtils.dropTable(connectionSource, Cwg.class, true);	
+		} catch (SQLException e) {
+			Log.e(CwgDatabaseHelper.class.getName(), "Can't drop databases", e);
+			throw new RuntimeException(e);
+		}
 		onCreate(db, connectionSource);
 		/*
 		if(oldVersion == 1 && newVersion == 2 ){
